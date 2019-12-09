@@ -1,0 +1,26 @@
+{
+  "name": "rds-ts-node-server",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev --no-notify --respawn --transpileOnly ./"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.5.0",
+    "@types/node": "12.12.16",
+    "@types/pg": "^7.11.2",
+    "ts-node": "8.5.4",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "3.7.3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.585.0",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.5.8",
+    "pg": "^7.14.0",
+    "reflect-metadata": "^0.1.10",
+    "typeorm": "0.2.21"
+  }
+}
