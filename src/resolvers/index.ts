@@ -6,9 +6,6 @@ import { User } from "../entity/User"
 import { APP_SECRET, getUserId } from "../utils"
 
 const getFirstUser = async (obj, args, context, info) => {
-  const userId = getUserId(context)
-  console.log(`Authenticated as userId: ${userId}`)
-
   const connection: Connection = await context.connection
   const firstUser = await connection
     .getRepository(User)
