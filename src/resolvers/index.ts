@@ -5,22 +5,17 @@ import { Connection } from "typeorm"
 import { User } from "../entity/User"
 import { APP_SECRET, getUserId } from "../utils"
 
-const getFirstUser = async (obj, args, context, info) => {
+async function getFirstUser(parent, args, context, info) {
   const connection: Connection = await context.connection
   const firstUser = await connection
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.id = :id", { id: 1 })
     .getOne()
-  console.log("First User:")
-  console.log(firstUser)
-
   return firstUser
-
-  // return getFirstUserFromRds(connection)
 }
 
-async function signup(obj, args, context, info) {
+async function signup(parent, args, context, info) {
   const connection: Connection = await context.connection
   const password = await bcrypt.hash(args.password, 10)
   const user = new User()
@@ -40,7 +35,7 @@ async function signup(obj, args, context, info) {
   }
 }
 
-async function login(obj, args, context, info) {
+async function login(parent, args, context, info) {
   const connection: Connection = await context.connection
 
   const user = await connection
