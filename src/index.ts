@@ -1,3 +1,4 @@
+import "dotenv/config"
 import "reflect-metadata"
 import { createConnection, Connection } from "typeorm"
 import { User } from "./entity/User"
@@ -21,7 +22,7 @@ const createTimberSaw = async (connection: Connection) => {
   console.log("Here you can setup and run express/koa/any other framework.")
 }
 
-const getFirstUser = async (connection: Connection) => {
+export const getFirstUser = async (connection: Connection) => {
   const firstUser = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -29,8 +30,16 @@ const getFirstUser = async (connection: Connection) => {
     .getOne()
   console.log("First User:")
   console.log(firstUser)
+
+  return firstUser
 }
 
-createConnection()
-  .then(getFirstUser)
-  .catch(error => console.log(error))
+// createConnection()
+//   .then(getFirstUser)
+//   .catch(error => console.log(error))
+
+/**
+ * We'll put this in apollo-server context
+ * @TODO see if putting a Promise in context is OK
+ */
+export const connection: Promise<Connection> = createConnection()
