@@ -15,6 +15,17 @@ async function getFirstUser(parent, args, context, info) {
   return firstUser
 }
 
+async function getUserById(parent, args, context, info) {
+  // const connection: Connection = await context.connection
+  const { connection } = context.dataSources
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: args.id })
+    .getOne()
+  return user
+}
+
 async function signup(parent, args, context, info) {
   const connection: Connection = await context.connection
   const password = await bcrypt.hash(args.password, 10)
@@ -64,6 +75,6 @@ async function login(parent, args, context, info) {
 }
 
 export const resolvers = {
-  Query: { getFirstUser },
+  Query: { getFirstUser, getUserById },
   Mutation: { signup, login },
 }
