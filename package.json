@@ -1,10 +1,10 @@
 {
   "name": "rds-ts-node-server",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node index.ts",
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly ./"
   },
   "devDependencies": {
@@ -16,6 +16,7 @@
     "typescript": "3.7.3"
   },
   "dependencies": {
+    "apollo-server": "^2.9.13",
     "aws-sdk": "^2.585.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
