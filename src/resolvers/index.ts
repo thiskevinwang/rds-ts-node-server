@@ -5,8 +5,19 @@ import { Connection } from "typeorm"
 import { User } from "../entity/User"
 import { APP_SECRET, getUserId } from "../utils"
 
-async function getFirstUser(parent, args, context, info) {
-  const connection: Connection = await context.connection
+interface Context {
+  dataSources: {
+    connection: Connection
+  }
+}
+
+async function getFirstUser(
+  parent,
+  args,
+  { dataSources: { connection } }: Context,
+  info
+) {
+  // const connection = context.dataSources.connection
   const firstUser = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -15,9 +26,12 @@ async function getFirstUser(parent, args, context, info) {
   return firstUser
 }
 
-async function getUserById(parent, args, context, info) {
-  // const connection: Connection = await context.connection
-  const { connection } = context.dataSources
+async function getUserById(
+  parent,
+  args,
+  { dataSources: { connection } }: Context,
+  info
+) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -26,8 +40,12 @@ async function getUserById(parent, args, context, info) {
   return user
 }
 
-async function signup(parent, args, context, info) {
-  const connection: Connection = await context.connection
+async function signup(
+  parent,
+  args,
+  { dataSources: { connection } }: Context,
+  info
+) {
   const password = await bcrypt.hash(args.password, 10)
   const user = new User()
   user.username = args.username
@@ -46,9 +64,12 @@ async function signup(parent, args, context, info) {
   }
 }
 
-async function login(parent, args, context, info) {
-  const connection: Connection = await context.connection
-
+async function login(
+  parent,
+  args,
+  { dataSources: { connection } }: Context,
+  info
+) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
