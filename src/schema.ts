@@ -10,6 +10,13 @@ export const typeDefs = gql`
     last_name: String
   }
 
+  type Comment {
+    id: Int
+    body: String
+    url: String
+    user: User
+  }
+
   type AuthPayload {
     token: String
     user: User
@@ -38,5 +45,7 @@ export const typeDefs = gql`
     ): AuthPayload
 
     login(email: String!, password: String!): AuthPayload
+
+    createComment(body: String!, url: String!): Comment
   }
 `
