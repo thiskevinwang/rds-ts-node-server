@@ -2,15 +2,15 @@ import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 import { Connection } from "typeorm"
 
-import { User } from "../entity/User"
 import { APP_SECRET, getUserId } from "../utils"
+import { User } from "../entity/User"
+import { Comment } from "../entity/Comment"
 
 interface Context {
-  currentUserId: string
   connection: Connection
 }
 
-async function getFirstUser(parent, args, { connection }, info) {
+async function getFirstUser(parent, args, { connection }: Context, info) {
   const firstUser = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -19,7 +19,7 @@ async function getFirstUser(parent, args, { connection }, info) {
   return firstUser
 }
 
-async function getUserById(parent, args, { connection }, info) {
+async function getUserById(parent, args, { connection }: Context, info) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -28,7 +28,7 @@ async function getUserById(parent, args, { connection }, info) {
   return user
 }
 
-async function signup(parent, args, { connection }, info) {
+async function signup(parent, args, { connection }: Context, info) {
   const password = await bcrypt.hash(args.password, 10)
   const user = new User()
   user.username = args.username
@@ -73,7 +73,40 @@ async function login(parent, args, { connection }: Context, info) {
   }
 }
 
+async function createComment(
+  parent,
+  args,
+  { connection, ...context }: Context,
+  info
+) {
+  const userId = getUserId(context)
+  if (!userId) throw new Error("No userId in token")
+
+  // const userRepository = connection.getRepository(User)
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  if (!user) throw new Error("No user found")
+  console.log(user)
+
+  const comment = new Comment()
+  comment.body = args.body
+  comment.type = "Comment"
+  comment.url = args.url
+  comment.user = user
+
+  // comment.id is undefined here
+  await connection.manager.save(comment)
+  // comment.id is auto-generated
+
+  return comment
+}
+
 export const resolvers = {
   Query: { getFirstUser, getUserById },
-  Mutation: { signup, login },
+  Mutation: { signup, login, createComment },
 }
