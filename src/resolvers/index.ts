@@ -36,7 +36,6 @@ async function signup(parent, args, { connection }: Context, info) {
   user.first_name = args.firstName
   user.last_name = args.lastName
   user.email = args.email
-  user.type = "User"
   await connection.manager.save(user)
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
@@ -91,11 +90,9 @@ async function createComment(
     .getOne()
 
   if (!user) throw new Error("No user found")
-  console.log(user)
 
   const comment = new Comment()
   comment.body = args.body
-  comment.type = "Comment"
   comment.url = args.url
   comment.user = user
 
