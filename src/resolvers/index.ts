@@ -6,18 +6,11 @@ import { User } from "../entity/User"
 import { APP_SECRET, getUserId } from "../utils"
 
 interface Context {
-  dataSources: {
-    connection: Connection
-  }
+  currentUserId: string
+  connection: Connection
 }
 
-async function getFirstUser(
-  parent,
-  args,
-  { dataSources: { connection } }: Context,
-  info
-) {
-  // const connection = context.dataSources.connection
+async function getFirstUser(parent, args, { connection }, info) {
   const firstUser = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -26,12 +19,7 @@ async function getFirstUser(
   return firstUser
 }
 
-async function getUserById(
-  parent,
-  args,
-  { dataSources: { connection } }: Context,
-  info
-) {
+async function getUserById(parent, args, { connection }, info) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -40,12 +28,7 @@ async function getUserById(
   return user
 }
 
-async function signup(
-  parent,
-  args,
-  { dataSources: { connection } }: Context,
-  info
-) {
+async function signup(parent, args, { connection }, info) {
   const password = await bcrypt.hash(args.password, 10)
   const user = new User()
   user.username = args.username
@@ -64,12 +47,7 @@ async function signup(
   }
 }
 
-async function login(
-  parent,
-  args,
-  { dataSources: { connection } }: Context,
-  info
-) {
+async function login(parent, args, { connection }: Context, info) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")

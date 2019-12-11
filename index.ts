@@ -14,19 +14,24 @@ async function main() {
     resolvers: resolvers,
     introspection: true,
     playground: true,
-    context: request => ({
-      ...request,
-      connection,
-    }),
-    dataSources: () => ({
-      connection: connection,
-    }),
+    /**
+     * The context callback gets called on every mutation/query.
+     * - So even though it can be async, await-ing createConnection()
+     *   will result in an error saying that the connection
+     *   already exists.
+     * @see https://www.apollographql.com/docs/apollo-server/data/data/#context-argument
+     */
+    context: request => {
+      return {
+        ...request,
+        connection,
+      }
+    },
   })
 
   server.listen({ port: 4044 }).then(({ url, subscriptionsUrl }) => {
     console.log(`🚀 Server ready at ${url}`)
     console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`)
-    console.log("\n")
   })
 }
 
