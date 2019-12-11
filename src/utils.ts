@@ -1,6 +1,7 @@
+import "dotenv/config"
 import * as jwt from "jsonwebtoken"
 
-export const APP_SECRET = "what-does-this-thing-do"
+export const APP_SECRET = process.env.APP_SECRET
 
 /**
  * This grabs the `{ userId }` from the jwt in a
