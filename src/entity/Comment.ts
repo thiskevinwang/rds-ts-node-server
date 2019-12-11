@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from "typeorm"
 
 import { User } from "./User"
+import { Reaction } from "./Reaction"
 
 @Entity({ name: "Comments" })
 export class Comment {
@@ -8,7 +15,7 @@ export class Comment {
   id: number
 
   @Column({ default: "Comment" })
-  type: string
+  type: string = "Comment"
 
   @Column()
   body: string
@@ -21,4 +28,10 @@ export class Comment {
     user => user.comments
   )
   user: User
+
+  @OneToMany(
+    type => Reaction,
+    reaction => reaction.user
+  )
+  reactions: Reaction[]
 }

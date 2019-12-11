@@ -5,6 +5,7 @@ import { Connection } from "typeorm"
 import { APP_SECRET, getUserId } from "../utils"
 import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
+import { Reaction } from "../entity/Reaction"
 
 interface Context {
   connection: Connection
@@ -103,7 +104,57 @@ async function createComment(
   return comment
 }
 
+async function reactToComment(
+  parent,
+  args,
+  { connection, ...context }: Context,
+  info
+) {
+  const userId = getUserId(context)
+  if (!userId) throw new Error("No userId in token")
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  if (!user) throw new Error(`No User found for id: ${userId}`)
+
+  const commentId = args.commentId
+  const comment = await connection
+    .getRepository(Comment)
+    .createQueryBuilder("comment")
+    .where("comment.id = :id", { id: commentId })
+    .getOne()
+  if (!comment) throw new Error(`No Comment found for id: ${commentId}`)
+
+  /**
+   * Check for an existing reaction
+   */
+  const existingReaction = await connection
+    .getRepository(Reaction)
+    .createQueryBuilder("reaction")
+    .where("reaction.user = :userId", { userId })
+    .andWhere("reaction.comment = :commentId", { commentId })
+    .getOne()
+
+  if (existingReaction) {
+    existingReaction.variant = args.variant
+    await connection.manager.save(existingReaction)
+    return existingReaction
+  }
+
+  const reaction = new Reaction()
+  reaction.variant = args.variant
+  reaction.user = user
+  reaction.comment = comment
+
+  await connection.manager.save(reaction)
+
+  return reaction
+}
+
 export const resolvers = {
   Query: { getFirstUser, getUserById },
-  Mutation: { signup, login, createComment },
+  Mutation: { signup, login, createComment, reactToComment },
 }

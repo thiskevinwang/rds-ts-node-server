@@ -1,4 +1,5 @@
 import { gql } from "apollo-server"
+import { ReactionVariant } from "./entity/Reaction"
 
 export const typeDefs = gql`
   type User {
@@ -14,6 +15,23 @@ export const typeDefs = gql`
     id: Int
     body: String
     url: String
+    user: User
+  }
+
+  enum ReactionVariant {
+    Like
+    Love
+    Haha
+    Wow
+    Sad
+    Angry
+  }
+
+  type Reaction {
+    id: Int
+    type: String
+    variant: ReactionVariant
+    comment: Comment
     user: User
   }
 
@@ -47,5 +65,7 @@ export const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload
 
     createComment(body: String!, url: String!): Comment
+
+    reactToComment(variant: ReactionVariant!, commentId: Int!): Reaction
   }
 `
