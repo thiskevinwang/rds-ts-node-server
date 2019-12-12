@@ -1,5 +1,4 @@
 import { gql } from "apollo-server"
-import { ReactionVariant } from "./entity/Reaction"
 
 export const typeDefs = gql`
   type User {
@@ -9,6 +8,8 @@ export const typeDefs = gql`
     password: String
     first_name: String
     last_name: String
+    comments: [Comment]
+    reactions: [Reaction]
   }
 
   type Comment {
@@ -16,6 +17,7 @@ export const typeDefs = gql`
     body: String
     url: String
     user: User
+    reactions: [Reaction]
   }
 
   enum ReactionVariant {
@@ -43,6 +45,9 @@ export const typeDefs = gql`
   type Query {
     getFirstUser: User
     getUserById(id: String!): User
+    getAllUsers: [User]
+    getAllComments: [Comment]
+    getAllReactions: [Reaction]
   }
 
   type Mutation {
@@ -65,7 +70,10 @@ export const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload
 
     createComment(body: String!, url: String!): Comment
-
     reactToComment(variant: ReactionVariant!, commentId: Int!): Reaction
+  }
+
+  type Subscription {
+    newReaction: Reaction
   }
 `

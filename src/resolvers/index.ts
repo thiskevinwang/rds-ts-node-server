@@ -1,15 +1,16 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
-import { Connection } from "typeorm"
 
-import { APP_SECRET, getUserId } from "../utils"
+import { Context } from "../../index"
+import { APP_SECRET, TokenPayload, getUserId } from "../utils"
 import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
 import { Reaction } from "../entity/Reaction"
 
-interface Context {
-  connection: Connection
-}
+/**
+ * A PubSub event label
+ */
+const USER_REACTED = "USER_REACTED"
 
 async function getFirstUser(parent, args, { connection }: Context, info) {
   const firstUser = await connection
@@ -27,6 +28,36 @@ async function getUserById(parent, args, { connection }: Context, info) {
     .where("user.id = :id", { id: args.id })
     .getOne()
   return user
+}
+
+async function getAllUsers(parent, args, { connection }: Context, info) {
+  const users = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .leftJoinAndSelect("user.comments", "comments")
+    .leftJoinAndSelect("user.reactions", "reactions")
+    .getMany()
+  return users
+}
+
+async function getAllComments(parent, args, { connection }: Context, info) {
+  const comments = await connection
+    .getRepository(Comment)
+    .createQueryBuilder("comment")
+    .leftJoinAndSelect("comment.user", "user")
+    .leftJoinAndSelect("comment.reactions", "reactions")
+    .getMany()
+  return comments
+}
+
+async function getAllReactions(parent, args, { connection }: Context, info) {
+  const reactions = await connection
+    .getRepository(Reaction)
+    .createQueryBuilder("reaction")
+    .leftJoinAndSelect("reaction.user", "user")
+    .leftJoinAndSelect("reaction.comment", "comment")
+    .getMany()
+  return reactions
 }
 
 async function signup(parent, args, { connection }: Context, info) {
@@ -54,31 +85,20 @@ async function login(parent, args, { connection }: Context, info) {
     .where("user.email = :email", { email: args.email })
     .getOne()
 
-  // if (!user) {
-  //   throw new Error("No such user found")
-  // }
-
   const valid = await bcrypt.compare(args.password, user.password)
-  // if (!valid) {
-  //   throw new Error("Invalid password")
-  // }
 
   if (!valid || !user) {
     throw new Error("Invalid email or password")
   }
 
   return {
-    token: jwt.sign({ userId: user.id }, APP_SECRET),
+    token: jwt.sign({ userId: user.id } as TokenPayload, APP_SECRET),
     user,
   }
 }
 
-async function createComment(
-  parent,
-  args,
-  { connection, ...context }: Context,
-  info
-) {
+async function createComment(parent, args, context: Context, info) {
+  const { connection } = context
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
 
@@ -104,12 +124,8 @@ async function createComment(
   return comment
 }
 
-async function reactToComment(
-  parent,
-  args,
-  { connection, ...context }: Context,
-  info
-) {
+async function reactToComment(parent, args, context: Context, info) {
+  const { connection, pubsub } = context
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
   const user = await connection
@@ -136,11 +152,14 @@ async function reactToComment(
     .createQueryBuilder("reaction")
     .where("reaction.user = :userId", { userId })
     .andWhere("reaction.comment = :commentId", { commentId })
+    .leftJoinAndSelect("reaction.user", "user")
+    .leftJoinAndSelect("reaction.comment", "comment")
     .getOne()
 
   if (existingReaction) {
     existingReaction.variant = args.variant
     await connection.manager.save(existingReaction)
+    await pubsub.publish(USER_REACTED, { newReaction: existingReaction })
     return existingReaction
   }
 
@@ -150,11 +169,27 @@ async function reactToComment(
   reaction.comment = comment
 
   await connection.manager.save(reaction)
+  await pubsub.publish(USER_REACTED, { userReacted: reaction })
 
   return reaction
 }
 
+const newReaction = {
+  subscribe: (obj, args, context, info) => {
+    const { pubsub } = context
+    // Additional event labels can be passed to asyncIterator creation
+    return pubsub.asyncIterator([USER_REACTED])
+  },
+}
+
 export const resolvers = {
-  Query: { getFirstUser, getUserById },
+  Query: {
+    getFirstUser,
+    getUserById,
+    getAllUsers,
+    getAllComments,
+    getAllReactions,
+  },
   Mutation: { signup, login, createComment, reactToComment },
+  Subscription: { newReaction },
 }
