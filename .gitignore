@@ -4,5 +4,8 @@ node_modules/
 build/
 tmp/
 temp/
-ormconfig.json
+
+# Ignore any type of ormconfig file
+ormconfig.*
+
 .env
