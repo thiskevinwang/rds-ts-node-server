@@ -31,7 +31,7 @@ export class Comment {
 
   @OneToMany(
     type => Reaction,
-    reaction => reaction.user
+    reaction => reaction.comment
   )
   reactions: Reaction[]
 }
