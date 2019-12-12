@@ -1,12 +1,20 @@
 import "reflect-metadata"
 
 import { ApolloServer, PubSub } from "apollo-server"
-import { createConnection } from "typeorm"
+import { createConnection, Connection } from "typeorm"
+import { Request, Response } from "express"
 
 import { typeDefs } from "./src/schema"
 import { resolvers } from "./src/resolvers"
 
 const pubsub = new PubSub()
+
+export interface Context {
+  connection: Connection
+  pubsub: PubSub
+  req: Request
+  res: Response
+}
 
 async function main() {
   const connection = await createConnection()
@@ -28,7 +36,7 @@ async function main() {
         ...request,
         connection,
         pubsub,
-      }
+      } as Context
     },
   })
 
