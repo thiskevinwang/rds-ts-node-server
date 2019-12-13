@@ -5,11 +5,23 @@ import { Context } from "../../index"
 import { APP_SECRET, TokenPayload, getUserId } from "../utils"
 import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
-import { Reaction } from "../entity/Reaction"
+import { Reaction, ReactionVariant } from "../entity/Reaction"
 
 import { USER_REACTED } from "./eventLabels"
 
-export async function signup(parent, args, { connection }: Context, info) {
+type SignupArgs = {
+  password: string
+  username: string
+  firstName: string
+  lastName: string
+  email: string
+}
+export async function signup(
+  parent,
+  args: SignupArgs,
+  { connection }: Context,
+  info
+) {
   const password = await bcrypt.hash(args.password, 10)
   const user = new User()
   user.username = args.username
@@ -27,7 +39,16 @@ export async function signup(parent, args, { connection }: Context, info) {
   }
 }
 
-export async function login(parent, args, { connection }: Context, info) {
+type LoginArgs = {
+  password: string
+  email: string
+}
+export async function login(
+  parent,
+  args: LoginArgs,
+  { connection }: Context,
+  info
+) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
@@ -73,7 +94,16 @@ export async function createComment(parent, args, context: Context, info) {
   return comment
 }
 
-export async function reactToComment(parent, args, context: Context, info) {
+type ReactToCommentArgs = {
+  commentId: number
+  variant: ReactionVariant
+}
+export async function reactToComment(
+  parent,
+  args: ReactToCommentArgs,
+  context: Context,
+  info
+) {
   const { connection, pubsub } = context
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
