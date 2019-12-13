@@ -53,7 +53,7 @@ export const typeDefs = gql`
 
   type Query {
     getFirstUser: User
-    getUserById(id: String!): User
+    getUserById(id: ID!): User
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
