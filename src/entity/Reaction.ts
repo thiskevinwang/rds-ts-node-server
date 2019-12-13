@@ -26,7 +26,7 @@ export class Reaction {
   @Column()
   created: Date = new Date()
 
-  @Column()
+  @Column({ nullable: true })
   updated: Date
 
   @ManyToOne(
