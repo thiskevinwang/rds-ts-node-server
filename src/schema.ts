@@ -1,22 +1,29 @@
 import { gql } from "apollo-server"
 
 export const typeDefs = gql`
+  scalar Date
+
   type User {
-    id: Int
-    username: String
-    email: String
-    password: String
-    first_name: String
-    last_name: String
+    id: ID!
+    username: String!
+    email: String!
+    password: String!
+    first_name: String!
+    last_name: String!
+    created: Date!
+    updated: Date
     comments: [Comment]
     reactions: [Reaction]
   }
 
   type Comment {
-    id: Int
-    body: String
-    url: String
-    user: User
+    id: ID!
+    body: String!
+    url: String!
+    created: Date!
+    updated: Date
+    deleted: Date
+    user: User!
     reactions: [Reaction]
   }
 
@@ -27,14 +34,16 @@ export const typeDefs = gql`
     Wow
     Sad
     Angry
+    None
   }
 
   type Reaction {
-    id: Int
-    type: String
-    variant: ReactionVariant
-    comment: Comment
-    user: User
+    id: ID!
+    variant: ReactionVariant!
+    created: Date!
+    updated: Date
+    comment: Comment!
+    user: User!
   }
 
   type AuthPayload {
