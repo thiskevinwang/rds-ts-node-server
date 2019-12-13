@@ -11,10 +11,10 @@ export class User {
   @Column({ default: "User" })
   type: string = "User"
 
-  @Column()
+  @Column({ type: "varchar", length: 25, unique: true })
   username: string
 
-  @Column({ type: "varchar", length: 62, default: "test", unique: true })
+  @Column({ type: "varchar", length: 62, unique: true })
   email: string
 
   @Column({ default: "password" })
@@ -25,6 +25,12 @@ export class User {
 
   @Column({ length: 50 })
   last_name: string
+
+  @Column()
+  created: Date = new Date()
+
+  @Column({ nullable: true })
+  updated: Date
 
   @OneToMany(
     type => Comment,

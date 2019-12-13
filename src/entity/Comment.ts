@@ -23,9 +23,19 @@ export class Comment {
   @Column()
   url: string
 
+  @Column()
+  created: Date = new Date()
+
+  @Column({ nullable: true })
+  updated: Date
+
+  @Column({ nullable: true })
+  deleted: Date
+
   @ManyToOne(
     type => User,
-    user => user.comments
+    user => user.comments,
+    { nullable: false }
   )
   user: User
 
