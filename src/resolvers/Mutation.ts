@@ -136,7 +136,19 @@ export async function reactToComment(
     .getOne()
 
   if (existingReaction) {
+    /**
+     * if the variant is the same, then set it to "None"
+     */
+    if (existingReaction.variant === args.variant) {
+      existingReaction.variant = "None"
+      existingReaction.updated = new Date()
+      await connection.manager.save(existingReaction)
+      await pubsub.publish(USER_REACTED, { newReaction: existingReaction })
+      return existingReaction
+    }
+
     existingReaction.variant = args.variant
+    existingReaction.updated = new Date()
     await connection.manager.save(existingReaction)
     await pubsub.publish(USER_REACTED, { newReaction: existingReaction })
     return existingReaction
