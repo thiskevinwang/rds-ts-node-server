@@ -1,22 +1,29 @@
 import { gql } from "apollo-server"
 
 export const typeDefs = gql`
+  scalar Date
+
   type User {
-    id: Int
-    username: String
-    email: String
-    password: String
-    first_name: String
-    last_name: String
+    id: ID!
+    username: String!
+    email: String!
+    password: String!
+    first_name: String!
+    last_name: String!
+    created: Date!
+    updated: Date
     comments: [Comment]
     reactions: [Reaction]
   }
 
   type Comment {
-    id: Int
-    body: String
-    url: String
-    user: User
+    id: ID!
+    body: String!
+    url: String!
+    created: Date!
+    updated: Date
+    deleted: Date
+    user: User!
     reactions: [Reaction]
   }
 
@@ -27,14 +34,16 @@ export const typeDefs = gql`
     Wow
     Sad
     Angry
+    None
   }
 
   type Reaction {
-    id: Int
-    type: String
-    variant: ReactionVariant
-    comment: Comment
-    user: User
+    id: ID!
+    variant: ReactionVariant!
+    created: Date!
+    updated: Date
+    comment: Comment!
+    user: User!
   }
 
   type AuthPayload {
@@ -42,9 +51,20 @@ export const typeDefs = gql`
     user: User
   }
 
+  """
+  # DELETE THIS TYPE
+  This is just used for testing
+  """
+  type ResetPasswordResponse {
+    """
+    Testing purposes
+    """
+    token: String
+  }
+
   type Query {
     getFirstUser: User
-    getUserById(id: String!): User
+    getUserById(id: ID!): User
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
@@ -66,6 +86,21 @@ export const typeDefs = gql`
       firstName: String!
       lastName: String!
     ): AuthPayload
+
+    updatePassword(password: String!, newPassword: String!): AuthPayload
+
+    """
+    This should return nothing.
+    It should just have a side effect of sending a password reset email link
+    """
+    requestPasswordResetLink(
+      """
+      A email address, duh
+      """
+      email: String!
+    ): ResetPasswordResponse
+
+    resetPassword(password: String!): User
 
     login(email: String!, password: String!): AuthPayload
 
