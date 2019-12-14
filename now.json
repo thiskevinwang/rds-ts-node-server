@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "*.ts",
+      "use": "@now/node-server"
+    }
+  ],
+  "routes": [{ "src": "/graphql", "dest": "index.ts" }],
+  "build": {
+    "env": {
+      "RDS_DB_HOST": "@rds_db_host",
+      "RDS_DB_PORT": "@rds_db_port",
+      "RDS_DB_USERNAME": "@rds_db_username",
+      "RDS_DB_PASSWORD": "@rds_db_password",
+      "RDS_DB_DATABASE": "@rds_db_database",
+      "APP_SECRET": "@app_secret"
+    }
+  },
+  "env": {
+    "RDS_DB_HOST": "@rds_db_host",
+    "RDS_DB_PORT": "@rds_db_port",
+    "RDS_DB_USERNAME": "@rds_db_username",
+    "RDS_DB_PASSWORD": "@rds_db_password",
+    "RDS_DB_DATABASE": "@rds_db_database",
+    "APP_SECRET": "@app_secret"
+  }
+}
