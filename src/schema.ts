@@ -76,6 +76,8 @@ export const typeDefs = gql`
       lastName: String!
     ): AuthPayload
 
+    updatePassword(password: String!, newPassword: String!): AuthPayload
+
     login(email: String!, password: String!): AuthPayload
 
     createComment(body: String!, url: String!): Comment

@@ -39,6 +39,49 @@ export async function signup(
   }
 }
 
+type UpdatedPasswordArgs = {
+  password: string
+  newPassword: string
+}
+export async function updatePassword(
+  parent,
+  args: UpdatedPasswordArgs,
+  { connection, ...context }: Context,
+  info
+) {
+  const userId = getUserId(context as Context)
+  if (!userId) throw new Error("No userId in token")
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  const valid = await bcrypt.compare(args.password, user.password)
+
+  if (!valid || !user) {
+    throw new Error("Invalid email or password")
+  }
+
+  if (args.newPassword === args.password) {
+    throw new Error("Please use a new, unique password")
+  }
+
+  const newPassword = await bcrypt.hash(args.newPassword, 10)
+
+  user.password = newPassword
+  user.updated = new Date()
+  await connection.manager.save(user)
+
+  const token = jwt.sign({ userId: user.id }, APP_SECRET)
+
+  return {
+    token,
+    user,
+  }
+}
+
 type LoginArgs = {
   password: string
   email: string
