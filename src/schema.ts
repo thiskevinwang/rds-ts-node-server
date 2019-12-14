@@ -51,6 +51,17 @@ export const typeDefs = gql`
     user: User
   }
 
+  """
+  # DELETE THIS TYPE
+  This is just used for testing
+  """
+  type ResetPasswordResponse {
+    """
+    Testing purposes
+    """
+    token: String
+  }
+
   type Query {
     getFirstUser: User
     getUserById(id: ID!): User
@@ -77,6 +88,19 @@ export const typeDefs = gql`
     ): AuthPayload
 
     updatePassword(password: String!, newPassword: String!): AuthPayload
+
+    """
+    This should return nothing.
+    It should just have a side effect of sending a password reset email link
+    """
+    requestPasswordResetLink(
+      """
+      A email address, duh
+      """
+      email: String!
+    ): ResetPasswordResponse
+
+    resetPassword(password: String!): User
 
     login(email: String!, password: String!): AuthPayload
 

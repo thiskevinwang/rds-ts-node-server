@@ -9,6 +9,8 @@ import { Reaction, ReactionVariant } from "../entity/Reaction"
 
 import { USER_REACTED } from "./eventLabels"
 
+const PASSWORD_RESET = "PASSWORD_RESET"
+
 type SignupArgs = {
   password: string
   username: string
@@ -80,6 +82,68 @@ export async function updatePassword(
     token,
     user,
   }
+}
+
+type RequestPasswordResetLinkArgs = {
+  email: string
+}
+export async function requestPasswordResetLink(
+  parent,
+  args: RequestPasswordResetLinkArgs,
+  { connection }: Context,
+  info
+) {
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.email = :email", { email: args.email })
+    .getOne()
+
+  const token = jwt.sign(
+    { permissions: [PASSWORD_RESET], userId: user.id },
+    APP_SECRET,
+    {
+      expiresIn: "10m",
+    }
+  )
+
+  return { token } // do not return. Send this in query string of an email link.
+}
+
+type ResetPasswordArgs = {
+  password: string
+}
+export async function resetPassword(
+  parent,
+  args: ResetPasswordArgs,
+  { connection, ...context }: Context,
+  info
+) {
+  const Authorization = context.req.get("Authorization")
+  if (!Authorization) throw new Error("Missing header") // best practices?
+
+  const token = Authorization.replace("Bearer ", "")
+
+  // jwt.verify(token, secretOrPublicKey, [options, callback])
+  const { permissions, userId } = jwt.verify(token, APP_SECRET) as {
+    permissions: string[]
+    userId: number
+  }
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  if (permissions.includes(PASSWORD_RESET)) {
+    const password = await bcrypt.hash(args.password, 10)
+    user.password = password
+    user.updated = new Date()
+    await connection.manager.save(user)
+  }
+
+  return user
 }
 
 type LoginArgs = {
