@@ -4,6 +4,7 @@
   "description": "An Apollo Server that uses TypeORM to connect to an RDS-postgres instance",
   "author": "kwangsan@gmail.com",
   "main": "index.ts",
+  "repository": "thiskevinwang/rds-ts-node-server",
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
