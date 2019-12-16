@@ -1,12 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "*.ts",
-      "use": "@now/node-server"
-    }
-  ],
-  "routes": [{ "src": "/graphql", "dest": "index.ts" }],
+  "version": 1,
   "build": {
     "env": {
       "RDS_DB_HOST": "@rds_db_host",
