@@ -7,7 +7,7 @@ import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
 import { Reaction, ReactionVariant } from "../entity/Reaction"
 
-import { USER_REACTED } from "./eventLabels"
+import { NEW_REACTION, NEW_COMMENT } from "./eventLabels"
 
 const PASSWORD_RESET = "PASSWORD_RESET"
 
@@ -175,7 +175,7 @@ export async function login(
 }
 
 export async function createComment(parent, args, context: Context, info) {
-  const { connection } = context
+  const { connection, pubsub } = context
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
 
@@ -196,6 +196,7 @@ export async function createComment(parent, args, context: Context, info) {
 
   // comment.id is undefined here
   await connection.manager.save(comment)
+  await pubsub.publish(NEW_COMMENT, { newComment: comment })
   // comment.id is auto-generated
 
   return comment
@@ -250,14 +251,14 @@ export async function reactToComment(
       existingReaction.variant = "None"
       existingReaction.updated = new Date()
       await connection.manager.save(existingReaction)
-      await pubsub.publish(USER_REACTED, { newReaction: existingReaction })
+      await pubsub.publish(NEW_REACTION, { newReaction: existingReaction })
       return existingReaction
     }
 
     existingReaction.variant = args.variant
     existingReaction.updated = new Date()
     await connection.manager.save(existingReaction)
-    await pubsub.publish(USER_REACTED, { newReaction: existingReaction })
+    await pubsub.publish(NEW_REACTION, { newReaction: existingReaction })
     return existingReaction
   }
 
@@ -267,7 +268,7 @@ export async function reactToComment(
   reaction.comment = comment
 
   await connection.manager.save(reaction)
-  await pubsub.publish(USER_REACTED, { userReacted: reaction })
+  await pubsub.publish(NEW_REACTION, { userReacted: reaction })
 
   return reaction
 }

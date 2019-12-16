@@ -110,5 +110,6 @@ export const typeDefs = gql`
 
   type Subscription {
     newReaction: Reaction
+    newComment: Comment
   }
 `
