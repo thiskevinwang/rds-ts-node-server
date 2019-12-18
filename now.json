@@ -7,7 +7,8 @@
       "RDS_DB_USERNAME": "@rds_db_username",
       "RDS_DB_PASSWORD": "@rds_db_password",
       "RDS_DB_DATABASE": "@rds_db_database",
-      "APP_SECRET": "@app_secret"
+      "APP_SECRET": "@app_secret",
+      "S3_BUCKET": "@s3_bucket"
     }
   },
   "env": {
@@ -16,6 +17,7 @@
     "RDS_DB_USERNAME": "@rds_db_username",
     "RDS_DB_PASSWORD": "@rds_db_password",
     "RDS_DB_DATABASE": "@rds_db_database",
-    "APP_SECRET": "@app_secret"
+    "APP_SECRET": "@app_secret",
+    "S3_BUCKET": "@s3_bucket"
   }
 }
