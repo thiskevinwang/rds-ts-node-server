@@ -4,16 +4,23 @@ import "dotenv/config"
 import { ApolloServer, PubSub } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
 import { Request, Response } from "express"
+import * as AWS from "aws-sdk"
 
 import { typeDefs } from "./src/schema"
 import { resolvers } from "./src/resolvers"
 import { entities } from "./src/entity"
 
 const pubsub = new PubSub()
+const s3 = new AWS.S3({
+  region: "us-east-1",
+  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+})
 
 export interface Context {
   connection: Connection
   pubsub: PubSub
+  s3: AWS.S3
   req: Request
   res: Response
 }
@@ -64,6 +71,7 @@ async function main() {
         ...request,
         connection,
         pubsub,
+        s3,
       } as Context
     },
   })
