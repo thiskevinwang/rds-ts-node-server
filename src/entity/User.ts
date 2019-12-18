@@ -26,6 +26,9 @@ export class User {
   @Column({ length: 50 })
   last_name: string
 
+  @Column({ length: 255, nullable: true })
+  avatar_url: string
+
   @Column()
   created: Date = new Date()
 
