@@ -272,3 +272,45 @@ export async function reactToComment(
 
   return reaction
 }
+
+type S3GetSignedPutObjectUrlArgs = {
+  fileName: string
+  fileType: "image/jpeg" | "image/png"
+}
+
+/**
+ * Get a signed s3 url to POST an image to S3
+ */
+export async function s3GetSignedPutObjectUrl(
+  parent,
+  args: S3GetSignedPutObjectUrlArgs,
+  context: Context,
+  info
+) {
+  const { fileName, fileType } = args
+  const { s3 } = context
+  const params = {
+    Bucket: process.env.S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: "public-read",
+  }
+
+  /**
+   * const { file } = state // the file uploaded on the client
+   * const options = {
+   *   headers: {
+   *     "Content-Type": file.type
+   *   }
+   * };
+   * await axios.put(signedRequest, file, options);
+   */
+  const signedPutObjectUrl = s3.getSignedUrl("putObject", params)
+  const objectUrl = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${fileName}`
+
+  return {
+    signedPutObjectUrl,
+    objectUrl,
+  }
+}
