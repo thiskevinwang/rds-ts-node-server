@@ -144,6 +144,8 @@ export const typeDefs = gql`
       """
       fileType: String!
     ): S3Payload!
+
+    updateUserAvatar(avatarUrl: String!): User
   }
 
   type Subscription {

@@ -287,6 +287,9 @@ export async function s3GetSignedPutObjectUrl(
   context: Context,
   info
 ) {
+  const userId = getUserId(context)
+  if (!userId) throw new Error("No userId in token")
+
   const { fileName, fileType } = args
   const { s3 } = context
   const params = {
@@ -313,4 +316,29 @@ export async function s3GetSignedPutObjectUrl(
     signedPutObjectUrl,
     objectUrl,
   }
+}
+
+type UpdateUserAvatarArgs = {
+  avatarUrl: string
+}
+export async function updateUserAvatar(
+  parent,
+  { avatarUrl }: UpdateUserAvatarArgs,
+  context: Context,
+  info
+) {
+  const { connection } = context
+  const userId = getUserId(context)
+  if (!userId) throw new Error("No userId in token")
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  user.avatar_url = avatarUrl
+  await connection.manager.save(user)
+
+  return user
 }
