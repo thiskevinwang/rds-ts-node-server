@@ -161,12 +161,10 @@ export async function login(
     .createQueryBuilder("user")
     .where("user.email = :email", { email: args.email })
     .getOne()
+  if (!user) throw new Error("Invalid email or password")
 
   const valid = await bcrypt.compare(args.password, user.password)
-
-  if (!valid || !user) {
-    throw new Error("Invalid email or password")
-  }
+  if (!valid) throw new Error("Invalid email or password")
 
   return {
     token: jwt.sign({ userId: user.id } as TokenPayload, APP_SECRET),
