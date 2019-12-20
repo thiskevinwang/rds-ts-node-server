@@ -11,16 +11,38 @@ import { resolvers } from "./src/resolvers"
 import { entities } from "./src/entity"
 
 const pubsub = new PubSub()
-const s3 = new AWS.S3({
+
+AWS.config.update({
   region: "us-east-1",
   accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
 })
+const s3 = new AWS.S3()
+
+/**
+ * # SES (project)
+ * [API DOCS](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html)
+ *
+ * @DONE
+ * - ✔︎ verify own email on SES
+ * - ✔︎ sent some test emails
+ * - ✔︎ formatted some raw emails
+ * - ✔︎ [Tutorial](https://aws.amazon.com/getting-started/tutorials/send-an-email/)
+ * @TODO
+ * - see [Next Steps](https://aws.amazon.com/getting-started/tutorials/send-an-email/)
+ * - ✖︎ Set up a process to handle bounces and complaints.
+ *   - https://docs.aws.amazon.com/ses/latest/DeveloperGuide/best-practices.html
+ * - ✖︎ request limit increase
+ *   - https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html
+ *
+ */
+const sesv2 = new AWS.SESV2()
 
 export interface Context {
   connection: Connection
   pubsub: PubSub
   s3: AWS.S3
+  sesv2: AWS.SESV2
   req: Request
   res: Response
 }
@@ -72,6 +94,7 @@ async function main() {
         connection,
         pubsub,
         s3,
+        sesv2,
       } as Context
     },
   })
