@@ -131,10 +131,9 @@ export async function resetPassword(
   const token = Authorization.replace("Bearer ", "")
 
   // jwt.verify(token, secretOrPublicKey, [options, callback])
-  const { permissions, userId } = jwt.verify(token, APP_SECRET) as {
-    permissions: string[]
-    userId: number
-  }
+  const { userId } = jwt.verify(token, APP_SECRET) as { userId: number }
+
+  const password = await bcrypt.hash(args.password, 10)
 
   const user = await connection
     .getRepository(User)
