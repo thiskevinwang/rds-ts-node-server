@@ -41,7 +41,7 @@ export const createPasswordResetEmailHTMLString = (
         <li>Time: ${new Date().toString()}</li>
       </ul>
 
-      <a href=${DOMAIN}/auth/reset?token=${token}">
+      <a href=${DOMAIN}/auth/reset?token=${token}>
         Reset Password
       </a>
       <!-- Footer -->
