@@ -35,6 +35,9 @@ export class User {
   @Column({ nullable: true })
   updated: Date
 
+  @Column({ nullable: true })
+  last_password_request: Date
+
   @OneToMany(
     type => Comment,
     comment => comment.user

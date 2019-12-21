@@ -35,6 +35,7 @@ export const typeDefs = gql`
     last_name: String!
     created: Date!
     updated: Date
+    last_password_request: Date
     avatar_url: String
     comments: [Comment]
     reactions: [Reaction]
