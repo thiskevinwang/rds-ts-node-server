@@ -1,5 +1,7 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
+import ms from "ms"
+import { SESV2 } from "aws-sdk"
 
 import { Context } from "../../index"
 import { APP_SECRET, TokenPayload, getUserId } from "../utils"
@@ -8,8 +10,7 @@ import { Comment } from "../entity/Comment"
 import { Reaction, ReactionVariant } from "../entity/Reaction"
 
 import { NEW_REACTION, NEW_COMMENT } from "./eventLabels"
-
-const PASSWORD_RESET = "PASSWORD_RESET"
+import { createPasswordResetEmailHTMLString } from "./password_reset_email"
 
 type SignupArgs = {
   password: string
@@ -84,13 +85,26 @@ export async function updatePassword(
   }
 }
 
-type RequestPasswordResetLinkArgs = {
+export type RequestPasswordResetLinkArgs = {
   email: string
 }
+/**
+ * This mutation checks for User by email
+ * - If no user, throws an Error
+ *
+ * Checks if password reset for the user is being requested
+ * too soon (with in 10 minutes)
+ * - throws an Error
+ *
+ * Updates `user.last_password_request`
+ * - saves to DB
+ *
+ * Sends a password reset link with token in URL parameters
+ */
 export async function requestPasswordResetLink(
   parent,
   args: RequestPasswordResetLinkArgs,
-  { connection }: Context,
+  { connection, sesv2, req }: Context,
   info
 ) {
   const user = await connection
@@ -98,16 +112,63 @@ export async function requestPasswordResetLink(
     .createQueryBuilder("user")
     .where("user.email = :email", { email: args.email })
     .getOne()
+  if (!user) throw new Error("An error occurred")
 
-  const token = jwt.sign(
-    { permissions: [PASSWORD_RESET], userId: user.id },
-    APP_SECRET,
-    {
-      expiresIn: "10m",
+  /**
+   * throttle, and throw
+   * - This is mainly to cut down on emails
+   */
+  if (user.last_password_request) {
+    const now: number = new Date().getTime()
+    const lastPlusTen: number = user.last_password_request.getTime() + ms("1h")
+    if (now < lastPlusTen) {
+      const waitTime: string = ms(lastPlusTen - now)
+      throw new Error(`Please check your email, or try again in ${waitTime}`)
     }
-  )
+  }
+  user.last_password_request = new Date()
+  await connection.manager.save(user)
 
-  return { token } // do not return. Send this in query string of an email link.
+  const token = jwt.sign({ userId: user.id }, APP_SECRET, {
+    expiresIn: "1h",
+  })
+
+  const params: SESV2.SendEmailRequest = {
+    Content: {
+      Simple: {
+        Body: {
+          Html: {
+            Data: createPasswordResetEmailHTMLString(user, req, token),
+            Charset: "UTF-8",
+          },
+          Text: {
+            Data: "Hey, html is not enabled... :(",
+            Charset: "UTF-8",
+          },
+        },
+        Subject: {
+          Data: "Password reset link!",
+          Charset: "UTF-8",
+        },
+      },
+    },
+    Destination: {
+      ToAddresses: [`${args.email}`],
+    },
+    FromEmailAddress: "kwangsan@gmail.com",
+    ReplyToAddresses: ["kwangsan@gmail.com"],
+  }
+
+  /** Send password reset */
+  sesv2.sendEmail(params, (err, data) => {
+    if (err) {
+      console.log(err, err.stack)
+    } else {
+      console.log(data)
+    }
+  })
+
+  return { message: "Please check your email!" } // do not return. Send this in query string of an email link.
 }
 
 type ResetPasswordArgs = {
