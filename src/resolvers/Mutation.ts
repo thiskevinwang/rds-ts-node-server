@@ -122,6 +122,12 @@ export async function resetPassword(
   const Authorization = context.req.get("Authorization")
   if (!Authorization) throw new Error("Missing header") // best practices?
 
+  if (args.password.length < 8) {
+    throw new Error(
+      "Please enter a password that is at least 8 characters long"
+    )
+  }
+
   const token = Authorization.replace("Bearer ", "")
 
   // jwt.verify(token, secretOrPublicKey, [options, callback])
