@@ -349,9 +349,20 @@ export async function s3GetSignedPutObjectUrl(
 ) {
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
+  const { s3, connection } = context
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  if (!user.verified_date) {
+    // Only provide signed url to verified users
+    throw new Error("You must be verified to do that")
+  }
 
   const { fileName, fileType } = args
-  const { s3 } = context
   const params = {
     Bucket: process.env.S3_BUCKET,
     Key: fileName,
