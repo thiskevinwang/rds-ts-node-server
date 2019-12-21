@@ -2,7 +2,6 @@ import { html } from "common-tags"
 
 import { User } from "../entity/User"
 import { Context } from "../../index"
-import { RequestPasswordResetLinkArgs } from "./Mutation"
 
 const DOMAIN =
   process.env.NODE_ENV !== "production"
@@ -14,13 +13,11 @@ const DOMAIN =
  * It needs a few pieces of data from the encompassing resolver
  *
  * @param user User Entity
- * @param args Mutation arguments
  * @param token JWT
  * @returns string
  */
 export const createPasswordResetEmailHTMLString = (
   user: User,
-  args: RequestPasswordResetLinkArgs,
   req: Context["req"],
   token: string
 ) => html`
@@ -37,8 +34,7 @@ export const createPasswordResetEmailHTMLString = (
         <h1>Hey ${user.first_name}!</h1>
       </div>
       <p>
-        A password reset has been requested for your account, associated with
-        ${args.email}
+        A password reset has been requested for your account.
       </p>
       <ul>
         <li>IP address: ${req.ip}</li>
