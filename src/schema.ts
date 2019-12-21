@@ -76,15 +76,8 @@ export const typeDefs = gql`
     user: User
   }
 
-  """
-  # DELETE THIS TYPE
-  This is just used for testing
-  """
   type ResetPasswordResponse {
-    """
-    Testing purposes
-    """
-    token: String
+    message: String
   }
 
   type Query {
