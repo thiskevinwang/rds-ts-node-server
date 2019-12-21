@@ -140,13 +140,9 @@ export async function resetPassword(
     .createQueryBuilder("user")
     .where("user.id = :id", { id: userId })
     .getOne()
-
-  if (permissions.includes(PASSWORD_RESET)) {
-    const password = await bcrypt.hash(args.password, 10)
   user.password = password
   user.updated = new Date()
   await connection.manager.save(user)
-  }
 
   return user
 }
