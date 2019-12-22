@@ -41,6 +41,9 @@ export class User {
   @Column({ nullable: true })
   verified_date: Date
 
+  @Column({ nullable: true })
+  banned: boolean
+
   @OneToMany(
     type => Comment,
     comment => comment.user
