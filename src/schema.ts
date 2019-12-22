@@ -3,6 +3,29 @@ import { gql } from "apollo-server"
 export const typeDefs = gql`
   scalar Date
 
+  type S3Payload {
+    """
+    #### Example
+    https://<bucket-name>.s3.amazonaws.com/<somefile.png>
+
+    ?AWSAccessKeyId=...
+
+    &Content-Type=jpg
+
+    &Expires=1576639181
+
+    &Signature=I1Epx79MX4bzbje%2FbNIgMCQfyU0%3D
+
+    &x-amz-acl=public-read
+    """
+    signedPutObjectUrl: String!
+    """
+    #### Example
+    https://<bucket-name>.s3.amazonaws.com/<somefile.png>
+    """
+    objectUrl: String!
+  }
+
   type User {
     id: ID!
     username: String!
@@ -12,6 +35,9 @@ export const typeDefs = gql`
     last_name: String!
     created: Date!
     updated: Date
+    last_password_request: Date
+    verified_date: Date
+    avatar_url: String
     comments: [Comment]
     reactions: [Reaction]
   }
@@ -51,15 +77,8 @@ export const typeDefs = gql`
     user: User
   }
 
-  """
-  # DELETE THIS TYPE
-  This is just used for testing
-  """
   type ResetPasswordResponse {
-    """
-    Testing purposes
-    """
-    token: String
+    message: String
   }
 
   type Query {
@@ -105,7 +124,23 @@ export const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload
 
     createComment(body: String!, url: String!): Comment
+
     reactToComment(variant: ReactionVariant!, commentId: Int!): Reaction
+
+    s3GetSignedPutObjectUrl(
+      """
+      my-little-bunny.jpg
+      """
+      fileName: String!
+      """
+      A standard MIME type describing thhe format of the object data.
+
+      jpg, jpeg, png, etc.
+      """
+      fileType: String!
+    ): S3Payload!
+
+    updateUserAvatar(avatarUrl: String!): User
   }
 
   type Subscription {

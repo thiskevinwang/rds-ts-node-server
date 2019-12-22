@@ -26,11 +26,23 @@ export class User {
   @Column({ length: 50 })
   last_name: string
 
+  @Column({ length: 255, nullable: true })
+  avatar_url: string
+
   @Column()
   created: Date = new Date()
 
   @Column({ nullable: true })
   updated: Date
+
+  @Column({ nullable: true })
+  last_password_request: Date
+
+  @Column({ nullable: true })
+  verified_date: Date
+
+  @Column({ nullable: true })
+  banned: boolean
 
   @OneToMany(
     type => Comment,

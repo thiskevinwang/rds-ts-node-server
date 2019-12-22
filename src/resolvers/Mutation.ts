@@ -1,5 +1,7 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
+import ms from "ms"
+import { SESV2 } from "aws-sdk"
 
 import { Context } from "../../index"
 import { APP_SECRET, TokenPayload, getUserId } from "../utils"
@@ -8,8 +10,7 @@ import { Comment } from "../entity/Comment"
 import { Reaction, ReactionVariant } from "../entity/Reaction"
 
 import { NEW_REACTION, NEW_COMMENT } from "./eventLabels"
-
-const PASSWORD_RESET = "PASSWORD_RESET"
+import { createPasswordResetEmailHTMLString } from "./password_reset_email"
 
 type SignupArgs = {
   password: string
@@ -84,13 +85,26 @@ export async function updatePassword(
   }
 }
 
-type RequestPasswordResetLinkArgs = {
+export type RequestPasswordResetLinkArgs = {
   email: string
 }
+/**
+ * This mutation checks for User by email
+ * - If no user, throws an Error
+ *
+ * Checks if password reset for the user is being requested
+ * too soon (with in 10 minutes)
+ * - throws an Error
+ *
+ * Updates `user.last_password_request`
+ * - saves to DB
+ *
+ * Sends a password reset link with token in URL parameters
+ */
 export async function requestPasswordResetLink(
   parent,
   args: RequestPasswordResetLinkArgs,
-  { connection }: Context,
+  { connection, sesv2, req }: Context,
   info
 ) {
   const user = await connection
@@ -98,16 +112,63 @@ export async function requestPasswordResetLink(
     .createQueryBuilder("user")
     .where("user.email = :email", { email: args.email })
     .getOne()
+  if (!user) throw new Error("An error occurred")
 
-  const token = jwt.sign(
-    { permissions: [PASSWORD_RESET], userId: user.id },
-    APP_SECRET,
-    {
-      expiresIn: "10m",
+  /**
+   * throttle, and throw
+   * - This is mainly to cut down on emails
+   */
+  if (user.last_password_request) {
+    const now: number = new Date().getTime()
+    const lastPlusTen: number = user.last_password_request.getTime() + ms("1h")
+    if (now < lastPlusTen) {
+      const waitTime: string = ms(lastPlusTen - now)
+      throw new Error(`Please check your email, or try again in ${waitTime}`)
     }
-  )
+  }
+  user.last_password_request = new Date()
+  await connection.manager.save(user)
 
-  return { token } // do not return. Send this in query string of an email link.
+  const token = jwt.sign({ userId: user.id }, APP_SECRET, {
+    expiresIn: "1h",
+  })
+
+  const params: SESV2.SendEmailRequest = {
+    Content: {
+      Simple: {
+        Body: {
+          Html: {
+            Data: createPasswordResetEmailHTMLString(user, req, token),
+            Charset: "UTF-8",
+          },
+          Text: {
+            Data: "Hey, html is not enabled... :(",
+            Charset: "UTF-8",
+          },
+        },
+        Subject: {
+          Data: "Password reset link!",
+          Charset: "UTF-8",
+        },
+      },
+    },
+    Destination: {
+      ToAddresses: [`${args.email}`],
+    },
+    FromEmailAddress: "kwangsan@gmail.com",
+    ReplyToAddresses: ["kwangsan@gmail.com"],
+  }
+
+  /** Send password reset */
+  sesv2.sendEmail(params, (err, data) => {
+    if (err) {
+      console.log(err, err.stack)
+    } else {
+      console.log(data)
+    }
+  })
+
+  return { message: "Please check your email!" } // do not return. Send this in query string of an email link.
 }
 
 type ResetPasswordArgs = {
@@ -122,26 +183,27 @@ export async function resetPassword(
   const Authorization = context.req.get("Authorization")
   if (!Authorization) throw new Error("Missing header") // best practices?
 
+  if (args.password.length < 8) {
+    throw new Error(
+      "Please enter a password that is at least 8 characters long"
+    )
+  }
+
   const token = Authorization.replace("Bearer ", "")
 
   // jwt.verify(token, secretOrPublicKey, [options, callback])
-  const { permissions, userId } = jwt.verify(token, APP_SECRET) as {
-    permissions: string[]
-    userId: number
-  }
+  const { userId } = jwt.verify(token, APP_SECRET) as { userId: number }
+
+  const password = await bcrypt.hash(args.password, 10)
 
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.id = :id", { id: userId })
     .getOne()
-
-  if (permissions.includes(PASSWORD_RESET)) {
-    const password = await bcrypt.hash(args.password, 10)
-    user.password = password
-    user.updated = new Date()
-    await connection.manager.save(user)
-  }
+  user.password = password
+  user.updated = new Date()
+  await connection.manager.save(user)
 
   return user
 }
@@ -161,12 +223,10 @@ export async function login(
     .createQueryBuilder("user")
     .where("user.email = :email", { email: args.email })
     .getOne()
+  if (!user) throw new Error("Invalid email or password")
 
   const valid = await bcrypt.compare(args.password, user.password)
-
-  if (!valid || !user) {
-    throw new Error("Invalid email or password")
-  }
+  if (!valid) throw new Error("Invalid email or password")
 
   return {
     token: jwt.sign({ userId: user.id } as TokenPayload, APP_SECRET),
@@ -213,6 +273,7 @@ export async function reactToComment(
   info
 ) {
   const { connection, pubsub } = context
+  /** The one who is reacting */
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
   const user = await connection
@@ -268,7 +329,88 @@ export async function reactToComment(
   reaction.comment = comment
 
   await connection.manager.save(reaction)
-  await pubsub.publish(NEW_REACTION, { userReacted: reaction })
+  await pubsub.publish(NEW_REACTION, { newReaction: reaction })
 
   return reaction
+}
+
+type S3GetSignedPutObjectUrlArgs = {
+  fileName: string
+  fileType: "image/jpeg" | "image/png"
+}
+
+/**
+ * Get a signed s3 url to POST an image to S3
+ */
+export async function s3GetSignedPutObjectUrl(
+  parent,
+  args: S3GetSignedPutObjectUrlArgs,
+  context: Context,
+  info
+) {
+  const userId = getUserId(context)
+  if (!userId) throw new Error("No userId in token")
+  const { s3, connection } = context
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  if (!user.verified_date) {
+    // Only provide signed url to verified users
+    throw new Error("You must be verified to do that")
+  }
+
+  const { fileName, fileType } = args
+  const params = {
+    Bucket: process.env.S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: "public-read",
+  }
+
+  /**
+   * const { file } = state // the file uploaded on the client
+   * const options = {
+   *   headers: {
+   *     "Content-Type": file.type
+   *   }
+   * };
+   * await axios.put(signedRequest, file, options);
+   */
+  const signedPutObjectUrl = s3.getSignedUrl("putObject", params)
+  const objectUrl = `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${fileName}`
+
+  return {
+    signedPutObjectUrl,
+    objectUrl,
+  }
+}
+
+type UpdateUserAvatarArgs = {
+  avatarUrl: string
+}
+export async function updateUserAvatar(
+  parent,
+  { avatarUrl }: UpdateUserAvatarArgs,
+  context: Context,
+  info
+) {
+  const { connection } = context
+  const userId = getUserId(context)
+  if (!userId) throw new Error("No userId in token")
+
+  const user = await connection
+    .getRepository(User)
+    .createQueryBuilder("user")
+    .where("user.id = :id", { id: userId })
+    .getOne()
+
+  user.avatar_url = avatarUrl
+  await connection.manager.save(user)
+
+  return user
 }
