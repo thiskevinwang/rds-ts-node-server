@@ -1,4 +1,2 @@
-/**
- * A PubSub event label
- */
-export const USER_REACTED = "USER_REACTED"
+export const NEW_REACTION = "NEW_REACTION"
+export const NEW_COMMENT = "NEW_COMMENT"

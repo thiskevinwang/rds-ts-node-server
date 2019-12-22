@@ -1,4 +1,5 @@
 import "reflect-metadata"
+import "dotenv/config"
 
 import { ApolloServer, PubSub } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
@@ -6,6 +7,7 @@ import { Request, Response } from "express"
 
 import { typeDefs } from "./src/schema"
 import { resolvers } from "./src/resolvers"
+import { entities } from "./src/entity"
 
 const pubsub = new PubSub()
 
@@ -17,8 +19,34 @@ export interface Context {
 }
 
 async function main() {
-  const connection = await createConnection()
-  console.log("✔ Connected to RDS")
+  const connection = await createConnection({
+    name: "default",
+    type: "postgres",
+    host: process.env.RDS_DB_HOST,
+    port: parseInt(process.env.RDS_DB_PORT),
+    username: process.env.RDS_DB_USERNAME,
+    password: process.env.RDS_DB_PASSWORD,
+    database: process.env.RDS_DB_DATABASE,
+    synchronize: true,
+    logging: false,
+    entities: entities,
+    migrations: ["src/migration/**/*.ts"],
+    subscribers: ["src/subscriber/**/*.ts"],
+    cli: {
+      entitiesDir: "src/entity",
+      migrationsDir: "src/migration",
+      subscribersDir: "src/subscriber",
+    },
+  })
+
+  if (connection.isConnected) {
+    console.log("✔ Connected to RDS")
+    console.log(
+      "Entity names:",
+      connection.entityMetadatas.map(e => e.name)
+    )
+  }
+
   const server = new ApolloServer({
     typeDefs: typeDefs,
     resolvers: resolvers,
