@@ -273,6 +273,7 @@ export async function reactToComment(
   info
 ) {
   const { connection, pubsub } = context
+  /** The one who is reacting */
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
   const user = await connection
@@ -328,7 +329,7 @@ export async function reactToComment(
   reaction.comment = comment
 
   await connection.manager.save(reaction)
-  await pubsub.publish(NEW_REACTION, { userReacted: reaction })
+  await pubsub.publish(NEW_REACTION, { newReaction: reaction })
 
   return reaction
 }
