@@ -42,6 +42,11 @@ export const typeDefs = gql`
     reactions: [Reaction]
   }
 
+  enum CommentOrderByInput {
+    created_ASC
+    created_DESC
+  }
+
   type Comment {
     id: ID!
     body: String!
@@ -88,7 +93,7 @@ export const typeDefs = gql`
     getAllComments: [Comment]
     getAllReactions: [Reaction]
 
-    getCommentsByUrl(url: String!): [Comment]
+    getCommentsByUrl(url: String!, filter: CommentOrderByInput): [Comment]
   }
 
   type Mutation {

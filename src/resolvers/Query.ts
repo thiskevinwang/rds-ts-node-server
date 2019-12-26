@@ -56,9 +56,17 @@ export async function getAllComments(
   return comments
 }
 
+enum CommentOrderByInput {
+  created_ASC = "created_ASC",
+  created_DESC = "created_DESC",
+}
+type GetCommentsByUrlArgs = {
+  url: string
+  filter: CommentOrderByInput
+}
 export async function getCommentsByUrl(
   parent,
-  { url },
+  { url, filter },
   { connection }: Context,
   info
 ) {
@@ -69,6 +77,18 @@ export async function getCommentsByUrl(
     .leftJoinAndSelect("comment.user", "user")
     .leftJoinAndSelect("comment.reactions", "reactions")
     .getMany()
+
+  // sorted by newest
+  if (filter === CommentOrderByInput.created_DESC) {
+    return comments.sort((a, b) => b.created.getTime() - a.created.getTime())
+  }
+
+  // sorted by oldest
+  if (filter === CommentOrderByInput.created_ASC) {
+    return comments.sort((a, b) => a.created.getTime() - b.created.getTime())
+  }
+
+  // sorted by id
   return comments
 }
 
