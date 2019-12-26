@@ -42,6 +42,11 @@ export const typeDefs = gql`
     reactions: [Reaction]
   }
 
+  enum CommentOrderByInput {
+    created_ASC
+    created_DESC
+  }
+
   type Comment {
     id: ID!
     body: String!
@@ -87,6 +92,8 @@ export const typeDefs = gql`
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
+
+    getCommentsByUrl(url: String!, filter: CommentOrderByInput): [Comment]
   }
 
   type Mutation {
@@ -125,7 +132,7 @@ export const typeDefs = gql`
 
     createComment(body: String!, url: String!): Comment
 
-    reactToComment(variant: ReactionVariant!, commentId: Int!): Reaction
+    reactToComment(variant: ReactionVariant!, commentId: ID!): Reaction
 
     s3GetSignedPutObjectUrl(
       """
