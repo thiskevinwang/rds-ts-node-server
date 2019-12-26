@@ -132,7 +132,7 @@ export const typeDefs = gql`
 
     createComment(body: String!, url: String!): Comment
 
-    reactToComment(variant: ReactionVariant!, commentId: Int!): Reaction
+    reactToComment(variant: ReactionVariant!, commentId: ID!): Reaction
 
     s3GetSignedPutObjectUrl(
       """
