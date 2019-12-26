@@ -87,6 +87,8 @@ export const typeDefs = gql`
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
+
+    getCommentsByUrl(url: String!): [Comment]
   }
 
   type Mutation {

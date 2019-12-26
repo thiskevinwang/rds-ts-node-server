@@ -56,6 +56,22 @@ export async function getAllComments(
   return comments
 }
 
+export async function getCommentsByUrl(
+  parent,
+  { url },
+  { connection }: Context,
+  info
+) {
+  const comments = await connection
+    .getRepository(Comment)
+    .createQueryBuilder("comment")
+    .where("comment.url = :url", { url })
+    .leftJoinAndSelect("comment.user", "user")
+    .leftJoinAndSelect("comment.reactions", "reactions")
+    .getMany()
+  return comments
+}
+
 export async function getAllReactions(
   parent,
   args,
