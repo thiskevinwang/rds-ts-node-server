@@ -66,7 +66,7 @@ type GetCommentsByUrlArgs = {
 }
 export async function getCommentsByUrl(
   parent,
-  { url, filter },
+  { url, filter }: GetCommentsByUrlArgs,
   { connection }: Context,
   info
 ) {
@@ -74,21 +74,25 @@ export async function getCommentsByUrl(
     .getRepository(Comment)
     .createQueryBuilder("comment")
     .where("comment.url = :url", { url })
+    /** using `is null` & `is not null` - @see https://github.com/typeorm/typeorm/issues/4000 */
+    .andWhere("comment.deleted is null")
+    /** orderBy - @see https://typeorm.io/#/select-query-builder/adding-order-by-expression */
+    .orderBy(
+      "comment.created",
+      (_filter => {
+        switch (_filter) {
+          case CommentOrderByInput.created_ASC:
+            return "ASC"
+          case CommentOrderByInput.created_DESC:
+          default:
+            return "DESC"
+        }
+      })(filter)
+    )
     .leftJoinAndSelect("comment.user", "user")
     .leftJoinAndSelect("comment.reactions", "reactions")
     .getMany()
 
-  // sorted by newest
-  if (filter === CommentOrderByInput.created_DESC) {
-    return comments.sort((a, b) => b.created.getTime() - a.created.getTime())
-  }
-
-  // sorted by oldest
-  if (filter === CommentOrderByInput.created_ASC) {
-    return comments.sort((a, b) => a.created.getTime() - b.created.getTime())
-  }
-
-  // sorted by id
   return comments
 }
 
