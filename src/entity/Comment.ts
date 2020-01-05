@@ -1,21 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Column,
-  ManyToOne,
-  OneToMany,
-} from "typeorm"
+import { Entity, Column, ManyToOne, OneToMany } from "typeorm"
 
+import { Base } from "./Base"
 import { User } from "./User"
 import { Reaction } from "./Reaction"
 
 @Entity({ name: "Comments" })
-export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class Comment extends Base {
   @Column({ default: "Comment" })
   type: string = "Comment"
 
@@ -24,15 +14,6 @@ export class Comment {
 
   @Column()
   url: string
-
-  @CreateDateColumn()
-  created: Date
-
-  @UpdateDateColumn({ nullable: true })
-  updated: Date
-
-  @Column({ nullable: true })
-  deleted: Date
 
   @ManyToOne(
     type => User,

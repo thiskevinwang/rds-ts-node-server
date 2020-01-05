@@ -1,20 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Column,
-  OneToMany,
-} from "typeorm"
+import { Entity, Column, OneToMany } from "typeorm"
 
+import { Base } from "./Base"
 import { Comment } from "./Comment"
 import { Reaction } from "./Reaction"
 
 @Entity({ name: "Users" })
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class User extends Base {
   @Column({ default: "User" })
   type: string = "User"
 
@@ -35,12 +26,6 @@ export class User {
 
   @Column({ length: 255, nullable: true })
   avatar_url: string
-
-  @CreateDateColumn()
-  created: Date
-
-  @UpdateDateColumn({ nullable: true })
-  updated: Date
 
   @Column({ nullable: true })
   last_password_request: Date

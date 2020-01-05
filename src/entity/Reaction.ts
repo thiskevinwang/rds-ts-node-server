@@ -1,13 +1,6 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Column,
-  ManyToOne,
-  OneToMany,
-} from "typeorm"
+import { Entity, Column, ManyToOne } from "typeorm"
 
+import { Base } from "./Base"
 import { Comment } from "./Comment"
 import { User } from "./User"
 
@@ -21,21 +14,12 @@ export type ReactionVariant =
   | "None"
 
 @Entity({ name: "Reactions" })
-export class Reaction {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class Reaction extends Base {
   @Column({ default: "Reaction" })
   type: string = "Reaction"
 
   @Column()
   variant: ReactionVariant
-
-  @CreateDateColumn()
-  created: Date
-
-  @UpdateDateColumn({ nullable: true })
-  updated: Date
 
   @ManyToOne(
     type => Comment,
