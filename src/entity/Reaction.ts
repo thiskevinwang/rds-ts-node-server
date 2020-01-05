@@ -4,21 +4,26 @@ import { Base } from "./Base"
 import { Comment } from "./Comment"
 import { User } from "./User"
 
-export type ReactionVariant =
-  | "Like"
-  | "Love"
-  | "Haha"
-  | "Wow"
-  | "Sad"
-  | "Angry"
-  | "None"
+export enum ReactionVariant {
+  Like = "Like",
+  Love = "Love",
+  Haha = "Haha",
+  Wow = "Wow",
+  Sad = "Sad",
+  Angry = "Angry",
+  None = "None",
+}
 
 @Entity({ name: "Reactions" })
 export class Reaction extends Base {
   @Column({ default: "Reaction" })
   type: string = "Reaction"
 
-  @Column()
+  @Column({
+    type: "enum",
+    enum: ReactionVariant,
+    nullable: true,
+  })
   variant: ReactionVariant
 
   @ManyToOne(
