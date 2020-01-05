@@ -22,7 +22,7 @@ export class Reaction extends Base {
   @Column({
     type: "enum",
     enum: ReactionVariant,
-    nullable: true,
+    default: ReactionVariant.None,
   })
   variant: ReactionVariant
 
