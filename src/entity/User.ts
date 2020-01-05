@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Column,
+  OneToMany,
+} from "typeorm"
 
 import { Comment } from "./Comment"
 import { Reaction } from "./Reaction"
@@ -29,10 +36,10 @@ export class User {
   @Column({ length: 255, nullable: true })
   avatar_url: string
 
-  @Column()
-  created: Date = new Date()
+  @CreateDateColumn()
+  created: Date
 
-  @Column({ nullable: true })
+  @UpdateDateColumn({ nullable: true })
   updated: Date
 
   @Column({ nullable: true })

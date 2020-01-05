@@ -1,6 +1,8 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
   Column,
   ManyToOne,
   OneToMany,
@@ -23,10 +25,10 @@ export class Comment {
   @Column()
   url: string
 
-  @Column()
-  created: Date = new Date()
+  @CreateDateColumn()
+  created: Date
 
-  @Column({ nullable: true })
+  @UpdateDateColumn({ nullable: true })
   updated: Date
 
   @Column({ nullable: true })
