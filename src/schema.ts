@@ -93,7 +93,12 @@ export const typeDefs = gql`
     getAllComments: [Comment]
     getAllReactions: [Reaction]
 
-    getCommentsByUrl(url: String!, filter: CommentOrderByInput): [Comment]
+    getCommentsByUrl(
+      url: String!
+      filter: CommentOrderByInput
+      skip: Int
+      take: Int
+    ): [Comment]
   }
 
   type Mutation {
