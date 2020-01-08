@@ -1,7 +1,16 @@
 {
-  "version": 1,
+  "version": 2,
+  "builds": [
+    {
+      "src": "*.ts",
+      "use": "@now/node-server"
+    }
+  ],
+  "routes": [{ "src": "/graphql", "dest": "index.ts" }],
   "build": {
     "env": {
+      "MY_AWS_ACCESS_KEY_ID": "@my_aws_access_key_id",
+      "MY_AWS_SECRET_ACCESS_KEY": "@my_aws_secret_access_key",
       "RDS_DB_HOST": "@rds_db_host",
       "RDS_DB_PORT": "@rds_db_port",
       "RDS_DB_USERNAME": "@rds_db_username",
@@ -12,6 +21,8 @@
     }
   },
   "env": {
+    "MY_AWS_ACCESS_KEY_ID": "@my_aws_access_key_id",
+    "MY_AWS_SECRET_ACCESS_KEY": "@my_aws_secret_access_key",
     "RDS_DB_HOST": "@rds_db_host",
     "RDS_DB_PORT": "@rds_db_port",
     "RDS_DB_USERNAME": "@rds_db_username",

@@ -59,12 +59,15 @@ export async function updatePassword(
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.id = :id", { id: userId })
+    .addSelect("user.password")
     .getOne()
+  if (!user) throw new Error("Invalid email or password")
 
-  const valid = await bcrypt.compare(args.password, user.password)
-
-  if (!valid || !user) {
-    throw new Error("Invalid email or password")
+  try {
+    const valid = await bcrypt.compare(args.password, user.password)
+    if (!valid) throw new Error("Invalid email or password")
+  } catch (err) {
+    throw new Error("Failed to validate")
   }
 
   if (args.newPassword === args.password) {
@@ -222,11 +225,16 @@ export async function login(
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.email = :email", { email: args.email })
+    .addSelect("user.password")
     .getOne()
   if (!user) throw new Error("Invalid email or password")
 
-  const valid = await bcrypt.compare(args.password, user.password)
-  if (!valid) throw new Error("Invalid email or password")
+  try {
+    const valid = await bcrypt.compare(args.password, user.password)
+    if (!valid) throw new Error("Invalid email or password")
+  } catch (err) {
+    throw new Error("Failed to validate")
+  }
 
   return {
     token: jwt.sign({ userId: user.id } as TokenPayload, APP_SECRET),
