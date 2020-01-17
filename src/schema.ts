@@ -86,13 +86,31 @@ export const typeDefs = gql`
     message: String
   }
 
+  type Session {
+    id: ID!
+    created: Date!
+    updated: Date
+    user: User!
+    attempts: [Attempt]
+  }
+
+  type Attempt {
+    id: ID!
+    created: Date!
+    updated: Date
+    grade: Int
+    send: Boolean
+    user: User
+    session: Session
+  }
+
   type Query {
     getFirstUser: User
     getUserById(id: ID!): User
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
-
+    getAllSessions: [Session]
     getCommentsByUrl(
       url: String!
       filter: CommentOrderByInput

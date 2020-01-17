@@ -2,6 +2,7 @@ import { Context } from "../../index"
 import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
 import { Reaction } from "../entity/Reaction"
+import { Session } from "../entity/Session"
 
 // @TODO make all these functions conform to the same
 // graphql resolver signature
@@ -113,4 +114,20 @@ export async function getAllReactions(
     .leftJoinAndSelect("reaction.comment", "comment")
     .getMany()
   return reactions
+}
+
+export async function getAllSessions(
+  parent,
+  args,
+  { connection }: Context,
+  info
+) {
+  const sessions = await connection
+    .getRepository(Session)
+    .createQueryBuilder("session")
+    .orderBy("session.created")
+    .leftJoinAndSelect("session.user", "user")
+    .leftJoinAndSelect("session.attempts", "attempts")
+    .getMany()
+  return sessions
 }

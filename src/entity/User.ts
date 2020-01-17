@@ -3,6 +3,8 @@ import { Entity, Column, OneToMany } from "typeorm"
 import { Base } from "./Base"
 import { Comment } from "./Comment"
 import { Reaction } from "./Reaction"
+import { Session } from "./Session"
+import { Attempt } from "./Attempt"
 
 @Entity({ name: "Users" })
 export class User extends Base {
@@ -47,4 +49,17 @@ export class User extends Base {
     reaction => reaction.user
   )
   reactions: Reaction[]
+
+  @OneToMany(
+    type => Session,
+    session => session.user
+  )
+  sessions: Session[]
+
+  @OneToMany(
+    type => Attempt,
+    attempt => attempt.user,
+    { nullable: true }
+  )
+  attempts: Attempt[]
 }
