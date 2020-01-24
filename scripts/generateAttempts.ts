@@ -42,7 +42,7 @@ async function main() {
     .getMany()
 
   sessions.map(async session => {
-    const attempts = Array(_.random(0, 10))
+    const attempts = Array(_.random(0, 40))
       .fill(null)
       .map(() => {
         const attempt = new Attempt()

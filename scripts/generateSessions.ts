@@ -28,11 +28,21 @@ async function main() {
     },
   })
 
-  const user = await connection
+  let user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.id = :id", { id: 1 })
     .getOne()
+
+  if (!user) {
+    user = new User()
+    user.first_name = "Kevin"
+    user.last_name = "Wang"
+    user.email = "test@test.co"
+    user.password = "testtest"
+    user.username = "Some_Test_User"
+    await connection.manager.save(user)
+  }
 
   Array(365)
     .fill(null)
