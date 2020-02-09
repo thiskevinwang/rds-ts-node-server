@@ -86,14 +86,6 @@ export const typeDefs = gql`
     message: String
   }
 
-  type Session {
-    id: ID!
-    created: Date!
-    updated: Date
-    user: User!
-    attempts: [Attempt]
-  }
-
   type Attempt {
     id: ID!
     created: Date!
@@ -101,7 +93,7 @@ export const typeDefs = gql`
     grade: Int
     send: Boolean
     user: User
-    session: Session
+    date: Date!
   }
 
   type Query {
@@ -110,7 +102,8 @@ export const typeDefs = gql`
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
-    getAllSessions: [Session]
+    getAllAttempts: [Attempt]
+    getAttemptsByUserId(userId: ID!): [Attempt]
     getCommentsByUrl(
       url: String!
       filter: CommentOrderByInput

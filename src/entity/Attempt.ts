@@ -2,7 +2,6 @@ import { Entity, Column, ManyToOne, OneToMany } from "typeorm"
 
 import { Base } from "./Base"
 import { User } from "./User"
-import { Session } from "./Session"
 
 @Entity({ name: "Attempts" })
 export class Attempt extends Base {
@@ -15,12 +14,9 @@ export class Attempt extends Base {
   @Column({ nullable: true })
   flash: boolean
 
-  @ManyToOne(
-    type => Session,
-    session => session.attempts,
-    { nullable: false }
-  )
-  session: Session
+  @Column({ nullable: true })
+  date: Date
+
   @ManyToOne(
     type => User,
     user => user.attempts,

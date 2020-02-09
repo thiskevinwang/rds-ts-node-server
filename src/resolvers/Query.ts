@@ -2,7 +2,7 @@ import { Context } from "../../index"
 import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
 import { Reaction } from "../entity/Reaction"
-import { Session } from "../entity/Session"
+import { Attempt } from "../entity/Attempt"
 
 // @TODO make all these functions conform to the same
 // graphql resolver signature
@@ -116,18 +116,34 @@ export async function getAllReactions(
   return reactions
 }
 
-export async function getAllSessions(
+export async function getAllAttempts(
   parent,
   args,
   { connection }: Context,
   info
 ) {
-  const sessions = await connection
-    .getRepository(Session)
-    .createQueryBuilder("session")
-    .orderBy("session.created")
-    .leftJoinAndSelect("session.user", "user")
-    .leftJoinAndSelect("session.attempts", "attempts")
+  const attempts = await connection
+    .getRepository(Attempt)
+    .createQueryBuilder("attempt")
+    .leftJoinAndSelect("attempt.user", "user")
     .getMany()
-  return sessions
+  return attempts
+}
+
+type GetAttemptsByUserIdArgs = {
+  userId: number
+}
+export async function getAttemptsByUserId(
+  parent,
+  { userId }: GetAttemptsByUserIdArgs,
+  { connection }: Context,
+  info
+) {
+  const attempts = await connection
+    .getRepository(Attempt)
+    .createQueryBuilder("attempt")
+    .where("attempt.user.id = :userId", { userId })
+    .leftJoinAndSelect("attempt.user", "user")
+    .getMany()
+  return attempts
 }
