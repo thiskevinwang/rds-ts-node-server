@@ -1,33 +1,30 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import { Entity, Column, ManyToOne } from "typeorm"
 
+import { Base } from "./Base"
 import { Comment } from "./Comment"
 import { User } from "./User"
 
-export type ReactionVariant =
-  | "Like"
-  | "Love"
-  | "Haha"
-  | "Wow"
-  | "Sad"
-  | "Angry"
-  | "None"
+export enum ReactionVariant {
+  Like = "Like",
+  Love = "Love",
+  Haha = "Haha",
+  Wow = "Wow",
+  Sad = "Sad",
+  Angry = "Angry",
+  None = "None",
+}
 
 @Entity({ name: "Reactions" })
-export class Reaction {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class Reaction extends Base {
   @Column({ default: "Reaction" })
   type: string = "Reaction"
 
-  @Column()
+  @Column({
+    type: "enum",
+    enum: ReactionVariant,
+    default: ReactionVariant.None,
+  })
   variant: ReactionVariant
-
-  @Column()
-  created: Date = new Date()
-
-  @Column({ nullable: true })
-  updated: Date
 
   @ManyToOne(
     type => Comment,

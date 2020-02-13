@@ -1,13 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { Entity, Column, OneToMany } from "typeorm"
 
+import { Base } from "./Base"
 import { Comment } from "./Comment"
 import { Reaction } from "./Reaction"
+import { Attempt } from "./Attempt"
 
 @Entity({ name: "Users" })
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export class User extends Base {
   @Column({ default: "User" })
   type: string = "User"
 
@@ -29,12 +28,6 @@ export class User {
   @Column({ length: 255, nullable: true })
   avatar_url: string
 
-  @Column()
-  created: Date = new Date()
-
-  @Column({ nullable: true })
-  updated: Date
-
   @Column({ nullable: true })
   last_password_request: Date
 
@@ -55,4 +48,11 @@ export class User {
     reaction => reaction.user
   )
   reactions: Reaction[]
+
+  @OneToMany(
+    type => Attempt,
+    attempt => attempt.user,
+    { nullable: true, cascade: true }
+  )
+  attempts: Attempt[]
 }

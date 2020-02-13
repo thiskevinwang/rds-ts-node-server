@@ -86,14 +86,30 @@ export const typeDefs = gql`
     message: String
   }
 
+  type Attempt {
+    id: ID!
+    created: Date!
+    updated: Date
+    grade: Int
+    send: Boolean
+    user: User
+    date: Date!
+  }
+
   type Query {
     getFirstUser: User
     getUserById(id: ID!): User
     getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
-
-    getCommentsByUrl(url: String!, filter: CommentOrderByInput): [Comment]
+    getAllAttempts: [Attempt]
+    getAttemptsByUserId(userId: ID!): [Attempt]
+    getCommentsByUrl(
+      url: String!
+      filter: CommentOrderByInput
+      skip: Int
+      take: Int
+    ): [Comment]
   }
 
   type Mutation {

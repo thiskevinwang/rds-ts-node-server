@@ -2,6 +2,7 @@ import { Context } from "../../index"
 import { User } from "../entity/User"
 import { Comment } from "../entity/Comment"
 import { Reaction } from "../entity/Reaction"
+import { Attempt } from "../entity/Attempt"
 
 // @TODO make all these functions conform to the same
 // graphql resolver signature
@@ -63,10 +64,12 @@ enum CommentOrderByInput {
 type GetCommentsByUrlArgs = {
   url: string
   filter: CommentOrderByInput
+  skip: number
+  take: number
 }
 export async function getCommentsByUrl(
   parent,
-  { url, filter }: GetCommentsByUrlArgs,
+  { url, filter, skip, take }: GetCommentsByUrlArgs,
   { connection }: Context,
   info
 ) {
@@ -76,6 +79,8 @@ export async function getCommentsByUrl(
     .where("comment.url = :url", { url })
     /** using `is null` & `is not null` - @see https://github.com/typeorm/typeorm/issues/4000 */
     .andWhere("comment.deleted is null")
+    .skip(skip) // skip ?? 0
+    .take(take) // take ?? all
     /** orderBy - @see https://typeorm.io/#/select-query-builder/adding-order-by-expression */
     .orderBy(
       "comment.created",
@@ -109,4 +114,36 @@ export async function getAllReactions(
     .leftJoinAndSelect("reaction.comment", "comment")
     .getMany()
   return reactions
+}
+
+export async function getAllAttempts(
+  parent,
+  args,
+  { connection }: Context,
+  info
+) {
+  const attempts = await connection
+    .getRepository(Attempt)
+    .createQueryBuilder("attempt")
+    .leftJoinAndSelect("attempt.user", "user")
+    .getMany()
+  return attempts
+}
+
+type GetAttemptsByUserIdArgs = {
+  userId: number
+}
+export async function getAttemptsByUserId(
+  parent,
+  { userId }: GetAttemptsByUserIdArgs,
+  { connection }: Context,
+  info
+) {
+  const attempts = await connection
+    .getRepository(Attempt)
+    .createQueryBuilder("attempt")
+    .where("attempt.user.id = :userId", { userId })
+    .leftJoinAndSelect("attempt.user", "user")
+    .getMany()
+  return attempts
 }

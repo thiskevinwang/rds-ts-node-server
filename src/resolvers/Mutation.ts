@@ -77,7 +77,6 @@ export async function updatePassword(
   const newPassword = await bcrypt.hash(args.newPassword, 10)
 
   user.password = newPassword
-  user.updated = new Date()
   await connection.manager.save(user)
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
@@ -205,7 +204,6 @@ export async function resetPassword(
     .where("user.id = :id", { id: userId })
     .getOne()
   user.password = password
-  user.updated = new Date()
   await connection.manager.save(user)
 
   return user
@@ -341,15 +339,13 @@ export async function reactToComment(
      * if the variant is the same, then set it to "None"
      */
     if (existingReaction.variant === args.variant) {
-      existingReaction.variant = "None"
-      existingReaction.updated = new Date()
+      existingReaction.variant = ReactionVariant.None
       await connection.manager.save(existingReaction)
       await pubsub.publish(NEW_REACTION, { newReaction: existingReaction })
       return existingReaction
     }
 
     existingReaction.variant = args.variant
-    existingReaction.updated = new Date()
     await connection.manager.save(existingReaction)
     await pubsub.publish(NEW_REACTION, { newReaction: existingReaction })
     return existingReaction
