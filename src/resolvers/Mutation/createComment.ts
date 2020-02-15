@@ -1,16 +1,8 @@
-import * as jwt from "jsonwebtoken"
-import * as bcrypt from "bcryptjs"
-import ms from "ms"
-import { SESV2 } from "aws-sdk"
-
 import { Context } from "../../../index"
-import { APP_SECRET, TokenPayload, getUserId } from "../../utils"
+import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 import { Comment } from "../../entity/Comment"
-import { Reaction, ReactionVariant } from "../../entity/Reaction"
-
-import { NEW_REACTION, NEW_COMMENT } from "../eventLabels"
-import { createPasswordResetEmailHTMLString } from "../password_reset_email"
+import { NEW_COMMENT } from "../eventLabels"
 
 export async function createComment(parent, args, context: Context, info) {
   const { connection, pubsub } = context
