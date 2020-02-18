@@ -1,3 +1,4 @@
+export { createAttempt } from "./createAttempt"
 export { createComment } from "./createComment"
 export { deleteCommentById } from "./deleteCommentById"
 export { login } from "./login"
