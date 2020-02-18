@@ -1,5 +1,11 @@
 # rds-ts-node-server
 
+## Notes
+
+This api is consumed by 
+- https://github.com/thiskevinwang/coffee-code-climb
+- https://github.com/thiskevinwang/you-suck-try-harder
+
 ## Prerequisites
 
 ### `ormconfig.(yml|json|js)`
