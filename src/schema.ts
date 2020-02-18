@@ -166,6 +166,8 @@ export const typeDefs = gql`
     ): S3Payload!
 
     updateUserAvatar(avatarUrl: String!): User
+
+    createAttempt(userId: ID!, send: Boolean!, grade: Int!, date: Date): Attempt
   }
 
   type Subscription {
