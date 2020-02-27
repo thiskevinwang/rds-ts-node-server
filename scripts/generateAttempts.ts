@@ -1,12 +1,14 @@
 import "reflect-metadata"
 import "dotenv/config"
 
+import * as bcrypt from "bcryptjs"
 import { createConnection } from "typeorm"
 import _ from "lodash"
+import ms from "ms"
+
 import { entities } from "../src/entity"
 import { Attempt } from "../src/entity/Attempt"
 import { User } from "../src/entity/User"
-import ms from "ms"
 
 async function main() {
   const connection = await createConnection({
@@ -29,13 +31,21 @@ async function main() {
     },
   })
 
-  const user = await connection
+  let user: User
+  user = await connection
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.id = :id", { id: 1 })
     .getOne()
 
-  if (!user) throw new Error("No user found")
+  if (!user) {
+    user = new User()
+    user.first_name = process.env.TEST_FIRST_NAME
+    user.last_name = process.env.TEST_LAST_NAME
+    user.email = process.env.TEST_EMAIL
+    user.password = await bcrypt.hash(process.env.TEST_PASSWORD, 10)
+    user.username = process.env.TEST_USERNAME
+  }
 
   const days = Array(365)
     .fill(null)
