@@ -7,7 +7,7 @@ export class CreateUsersTable1584905823148 implements MigrationInterface {
 			-- wrap the tablename in double quotes ("Users")
 			CREATE TABLE "Users"
 			(
-				id SERIAL PRIMARY KEY,
+				id SERIAL PRIMARY KEY UNIQUE,
 				type VARCHAR NOT NULL DEFAULT 'User',
 				username VARCHAR(25) NOT NULL,
 				email VARCHAR(62) NOT NULL,
@@ -23,7 +23,15 @@ export class CreateUsersTable1584905823148 implements MigrationInterface {
 				banned BOOLEAN,
 				deleted TIMESTAMP
 			)
-    `)
+		`)
+    await queryRunner.query(`
+			ALTER TABLE "Users"
+			ADD CONSTRAINT unique_username UNIQUE ("username")
+		`)
+    await queryRunner.query(`
+			ALTER TABLE "Users"
+			ADD CONSTRAINT unique_email UNIQUE ("email")
+		`)
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
