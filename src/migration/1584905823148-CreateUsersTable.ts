@@ -3,7 +3,9 @@ import { MigrationInterface, QueryRunner } from "typeorm"
 export class CreateUsersTable1584905823148 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
-			CREATE TABLE users
+			-- in order to preserve capital casing in postgres
+			-- wrap the tablename in double quotes ("Users")
+			CREATE TABLE "Users"
 			(
 				id SERIAL PRIMARY KEY,
 				type VARCHAR NOT NULL DEFAULT 'User',
@@ -26,7 +28,7 @@ export class CreateUsersTable1584905823148 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
-			DROP TABLE users
+			DROP TABLE "Users"
 		`)
   }
 }
