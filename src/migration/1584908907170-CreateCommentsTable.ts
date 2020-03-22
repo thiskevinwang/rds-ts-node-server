@@ -11,7 +11,7 @@ export class CreateCommentsTable1584908907170 implements MigrationInterface {
 				url VARCHAR NOT NULL,
 				-- NOW() is a postgres date function
 				created TIMESTAMP NOT NULL DEFAULT NOW(),
-				userId INTEGER NOT NULL,
+				userId INTEGER NOT NULL REFERENCES "Users"(id),
 				deleted TIMESTAMP,
 				updated TIMESTAMP DEFAULT NOW()
 			)
