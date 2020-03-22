@@ -2,7 +2,8 @@
 
 ## Notes
 
-This api is consumed by 
+This api is consumed by
+
 - https://github.com/thiskevinwang/coffee-code-climb
 - https://github.com/thiskevinwang/you-suck-try-harder
 
@@ -19,8 +20,8 @@ You will need an `ormconfig` file in the root directory (next to `package.json`)
 ```yml
 default:
   type: "postgres"
-  host: "<rds-database-endpoint>"     # update this
-  port: 0000                          # update this
+  host: "<rds-database-endpoint>" # update this
+  port: 0000 # update this
   username: "<rds-database-username>" # update this
   password: "<rds-database-password>" # update this
   database: "postgres"
@@ -42,4 +43,39 @@ default:
     entitiesDir: "src/entity"
     migrationsDir: "src/migration"
     subscribersDir: "src/subscriber"
+```
+
+---
+
+# Migrations
+
+## Generating Migrations
+
+```bash
+typeorm migration:generate -n ExampleMigrationName
+```
+
+This will generate a new migration called `{TIMESTAMP}-ExampleMigrationName.ts` with empty `up` & `down` migrations.
+
+## Running and Reverting Migrations
+
+### ⚠️ WARNING
+
+Make sure your `ormconfig.yml` has the correct values.
+
+- `ts` code that runs the actual server, might read from `process.env.<ENV_VARIABLES>`,
+- the TypeORM CLI will read from `ormconfig.(yml|json|etc)`
+
+  - make sure they're both pointing to the correct databases... You might be unknowingly running migrations on the actual RDS instance 🤣...
+
+- For more info, see the [TypeORM docs](https://github.com/typeorm/typeorm/blob/master/docs/migrations.md#running-and-reverting-migrations)
+
+With `ts-node`:
+
+```bash
+# run
+ts-node ./node_modules/typeorm/cli.js migration:run
+
+# revert
+ts-node ./node_modules/typeorm/cli.js migration:revert
 ```
