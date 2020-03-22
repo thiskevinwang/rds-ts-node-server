@@ -20,7 +20,7 @@ export class CreateAttemptsTable1584915347629 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(`
-			DROP TABLE "Attempts
+			DROP TABLE "Attempts"
 		`)
   }
 }
