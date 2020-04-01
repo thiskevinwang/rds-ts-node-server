@@ -1,4 +1,4 @@
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 import { Comment } from "../../entity/Comment"
@@ -10,12 +10,10 @@ type ReactToCommentArgs = {
   commentId: number
   variant: ReactionVariant
 }
-export async function reactToComment(
-  parent,
-  args: ReactToCommentArgs,
-  context: Context,
-  info
-) {
+export const reactToComment: ResolverFn<
+  Reaction,
+  ReactToCommentArgs
+> = async function (parent, args, context, info) {
   const { connection, pubsub } = context
   /** The one who is reacting */
   const userId = getUserId(context)

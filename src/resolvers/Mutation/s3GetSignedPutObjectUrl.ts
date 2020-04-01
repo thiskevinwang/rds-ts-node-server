@@ -1,4 +1,4 @@
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 
@@ -6,16 +6,18 @@ type S3GetSignedPutObjectUrlArgs = {
   fileName: string
   fileType: "image/jpeg" | "image/png"
 }
+type S3GetSignedPutObjectUrlReturn = {
+  signedPutObjectUrl
+  objectUrl
+}
 
 /**
  * Get a signed s3 url to POST an image to S3
  */
-export async function s3GetSignedPutObjectUrl(
-  parent,
-  args: S3GetSignedPutObjectUrlArgs,
-  context: Context,
-  info
-) {
+export const s3GetSignedPutObjectUrl: ResolverFn<
+  S3GetSignedPutObjectUrlReturn,
+  S3GetSignedPutObjectUrlArgs
+> = async function (parent, args, context, info) {
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
   const { s3, connection } = context

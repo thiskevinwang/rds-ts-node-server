@@ -1,16 +1,14 @@
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 
 type UpdateUserAvatarArgs = {
   avatarUrl: string
 }
-export async function updateUserAvatar(
-  parent,
-  { avatarUrl }: UpdateUserAvatarArgs,
-  context: Context,
-  info
-) {
+export const updateUserAvatar: ResolverFn<
+  User,
+  UpdateUserAvatarArgs
+> = async function (parent, { avatarUrl }, context, info) {
   const { connection } = context
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")

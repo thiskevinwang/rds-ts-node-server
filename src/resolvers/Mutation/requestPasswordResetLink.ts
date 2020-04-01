@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken"
 import ms from "ms"
 import { SESV2 } from "aws-sdk"
 
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { APP_SECRET } from "../../utils"
 import { User } from "../../entity/User"
 import { createPasswordResetEmailHTMLString } from "../password_reset_email"
@@ -23,12 +23,10 @@ export type RequestPasswordResetLinkArgs = {
  *
  * Sends a password reset link with token in URL parameters
  */
-export async function requestPasswordResetLink(
-  parent,
-  args: RequestPasswordResetLinkArgs,
-  { connection, sesv2, req }: Context,
-  info
-) {
+export const requestPasswordResetLink: ResolverFn<
+  { message: string },
+  RequestPasswordResetLinkArgs
+> = async function (parent, args, { connection, sesv2, req }, info) {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")

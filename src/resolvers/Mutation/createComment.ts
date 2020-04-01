@@ -1,10 +1,15 @@
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 import { Comment } from "../../entity/Comment"
 import { NEW_COMMENT } from "../eventLabels"
 
-export async function createComment(parent, args, context: Context, info) {
+export const createComment: ResolverFn<Comment> = async function (
+  parent,
+  args,
+  context,
+  info
+) {
   const { connection, pubsub } = context
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")

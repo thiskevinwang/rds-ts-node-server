@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { APP_SECRET, TokenPayload } from "../../utils"
 import { User } from "../../entity/User"
 
@@ -9,10 +9,14 @@ type LoginArgs = {
   password: string
   email: string
 }
-export async function login(
+type LoginReturn = {
+  token: string
+  user: User
+}
+export const login: ResolverFn<LoginReturn, LoginArgs> = async function (
   parent,
-  args: LoginArgs,
-  { connection }: Context,
+  args,
+  { connection },
   info
 ) {
   const user = await connection
