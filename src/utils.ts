@@ -18,7 +18,7 @@ export type TokenPayload = { userId: number }
  *   - "invalid signature"
  * @param context the context object from a graphql resolver
  */
-export function getUserId(context: Context): number {
+export function getUserId(context: Pick<Context, "req">): number {
   const Authorization = context.req.get("Authorization")
   if (Authorization) {
     const token = Authorization.replace("Bearer ", "")
