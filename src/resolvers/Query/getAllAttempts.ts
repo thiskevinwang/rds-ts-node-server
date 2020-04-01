@@ -1,7 +1,7 @@
 import { ResolverFn } from "resolvers"
 import { Attempt } from "../../entity/Attempt"
 
-export const getAllAtempts: ResolverFn<Attempt[]> = async function (
+export const getAllAttempts: ResolverFn<Attempt[]> = async function (
   parent,
   args,
   { connection },
