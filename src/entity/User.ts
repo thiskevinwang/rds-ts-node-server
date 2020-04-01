@@ -37,22 +37,15 @@ export class User extends Base {
   @Column({ nullable: true })
   banned: boolean
 
-  @OneToMany(
-    type => Comment,
-    comment => comment.user
-  )
+  @OneToMany(type => Comment, comment => comment.user)
   comments: Comment[]
 
-  @OneToMany(
-    type => Reaction,
-    reaction => reaction.user
-  )
+  @OneToMany(type => Reaction, reaction => reaction.user)
   reactions: Reaction[]
 
-  @OneToMany(
-    type => Attempt,
-    attempt => attempt.user,
-    { nullable: true, cascade: true }
-  )
+  @OneToMany(type => Attempt, attempt => attempt.user, {
+    nullable: true,
+    cascade: true,
+  })
   attempts: Attempt[]
 }

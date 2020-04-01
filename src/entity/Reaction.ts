@@ -26,17 +26,9 @@ export class Reaction extends Base {
   })
   variant: ReactionVariant
 
-  @ManyToOne(
-    type => Comment,
-    comment => comment.reactions,
-    { nullable: false }
-  )
+  @ManyToOne(type => Comment, comment => comment.reactions, { nullable: false })
   comment: Comment
 
-  @ManyToOne(
-    type => User,
-    user => user.reactions,
-    { nullable: false }
-  )
+  @ManyToOne(type => User, user => user.reactions, { nullable: false })
   user: User
 }
