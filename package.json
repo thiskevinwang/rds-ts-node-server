@@ -25,7 +25,7 @@
     "prettier": "^2.0.2",
     "ts-node": "8.5.4",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.8.0-dev.20200208"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "apollo-server": "^2.9.13",
