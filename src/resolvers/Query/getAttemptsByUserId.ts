@@ -1,15 +1,13 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { Attempt } from "../../entity/Attempt"
 
 type GetAttemptsByUserIdArgs = {
   userId: number
 }
-export async function getAttemptsByUserId(
-  parent,
-  { userId }: GetAttemptsByUserIdArgs,
-  { connection }: Context,
-  info
-) {
+export const getAttemptsByUserId: ResolverFn<
+  Attempt[],
+  GetAttemptsByUserIdArgs
+> = async function (parent, { userId }, { connection }, info) {
   const attempts = await connection
     .getRepository(Attempt)
     .createQueryBuilder("attempt")

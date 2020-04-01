@@ -1,7 +1,12 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { User } from "../../entity/User"
 
-export async function getAllUsers(parent, args, { connection }: Context, info) {
+export const getAllUsers: ResolverFn<User[]> = async function (
+  parent,
+  args,
+  { connection },
+  info
+) {
   const users = await connection
     .getRepository(User)
     .createQueryBuilder("user")

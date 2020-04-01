@@ -1,10 +1,10 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { Comment } from "../../entity/Comment"
 
-export async function getAllComments(
+export const getAllComments: ResolverFn<Comment[]> = async function (
   parent,
   args,
-  { connection }: Context,
+  { connection },
   info
 ) {
   const comments = await connection

@@ -1,10 +1,10 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { Attempt } from "../../entity/Attempt"
 
-export async function getAllAttempts(
+export const getAllAtempts: ResolverFn<Attempt[]> = async function (
   parent,
   args,
-  { connection }: Context,
+  { connection },
   info
 ) {
   const attempts = await connection

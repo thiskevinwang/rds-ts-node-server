@@ -1,10 +1,10 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { User } from "../../entity/User"
 
-export async function getFirstUser(
+export const getFirstUser: ResolverFn<User> = async function (
   parent,
   args,
-  { connection }: Context,
+  { connection },
   info
 ) {
   const firstUser = await connection
