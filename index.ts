@@ -56,7 +56,7 @@ async function main() {
     username: process.env.RDS_DB_USERNAME,
     password: process.env.RDS_DB_PASSWORD,
     database: process.env.RDS_DB_DATABASE,
-    synchronize: true,
+    // synchronize: true,
     logging: false,
     entities: entities,
     migrations: ["src/migration/**/*.ts"],
