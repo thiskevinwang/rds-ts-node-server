@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 import fetch from "isomorphic-fetch"
 
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { APP_SECRET } from "../../utils"
 import { User } from "../../entity/User"
 
@@ -13,10 +13,14 @@ type SignupArgs = {
   lastName: string
   email: string
 }
-export async function signup(
+type SignupReturn = {
+  token: string
+  user: User
+}
+export const signup: ResolverFn<SignupReturn, SignupArgs> = async function (
   parent,
-  args: SignupArgs,
-  { connection }: Context,
+  args,
+  { connection },
   info
 ) {
   try {

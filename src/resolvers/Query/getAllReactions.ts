@@ -1,10 +1,10 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { Reaction } from "../../entity/Reaction"
 
-export async function getAllReactions(
+export const getAllReactions: ResolverFn<Reaction[]> = async function (
   parent,
   args,
-  { connection }: Context,
+  { connection },
   info
 ) {
   const reactions = await connection

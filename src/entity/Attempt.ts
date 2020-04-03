@@ -17,10 +17,6 @@ export class Attempt extends Base {
   @Column({ nullable: true })
   date: Date
 
-  @ManyToOne(
-    type => User,
-    user => user.attempts,
-    { nullable: false }
-  )
+  @ManyToOne(type => User, user => user.attempts, { nullable: false })
   user: User
 }

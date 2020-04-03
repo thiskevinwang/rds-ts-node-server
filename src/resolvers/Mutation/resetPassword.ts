@@ -3,19 +3,17 @@ import * as bcrypt from "bcryptjs"
 import ms from "ms"
 import { SESV2 } from "aws-sdk"
 
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { APP_SECRET } from "../../utils"
 import { User } from "../../entity/User"
 
 type ResetPasswordArgs = {
   password: string
 }
-export async function resetPassword(
-  parent,
-  args: ResetPasswordArgs,
-  { connection, ...context }: Context,
-  info
-) {
+export const resetPassword: ResolverFn<
+  User,
+  ResetPasswordArgs
+> = async function (parent, args, { connection, ...context }, info) {
   const Authorization = context.req.get("Authorization")
   if (!Authorization) throw new Error("Missing header") // best practices?
 

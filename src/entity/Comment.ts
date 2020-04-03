@@ -15,16 +15,9 @@ export class Comment extends Base {
   @Column()
   url: string
 
-  @ManyToOne(
-    type => User,
-    user => user.comments,
-    { nullable: false }
-  )
+  @ManyToOne(type => User, user => user.comments, { nullable: false })
   user: User
 
-  @OneToMany(
-    type => Reaction,
-    reaction => reaction.comment
-  )
+  @OneToMany(type => Reaction, reaction => reaction.comment)
   reactions: Reaction[]
 }

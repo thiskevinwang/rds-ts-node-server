@@ -1,4 +1,4 @@
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 import { Attempt } from "../../entity/Attempt"
@@ -10,12 +10,10 @@ type CreateAttemptArgs = {
   date: Date
 }
 
-export async function createAttempt(
-  parent,
-  { userId, send, grade, date }: CreateAttemptArgs,
-  context: Context,
-  info
-) {
+export const createAttempt: ResolverFn<
+  Attempt,
+  CreateAttemptArgs
+> = async function (parent, { userId, send, grade, date }, context, info) {
   const { connection } = context
   /**
    * @todo use token from headers for userId

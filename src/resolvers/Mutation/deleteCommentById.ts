@@ -1,11 +1,11 @@
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { getUserId } from "../../utils"
 import { Comment } from "../../entity/Comment"
 
-export async function deleteCommentById(
+export const deleteCommentById: ResolverFn<Comment> = async function (
   parent,
   { id },
-  context: Context,
+  context,
   info
 ) {
   const { connection } = context

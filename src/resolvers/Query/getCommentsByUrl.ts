@@ -1,4 +1,4 @@
-import { Context } from "index"
+import { ResolverFn } from "resolvers"
 import { Comment } from "../../entity/Comment"
 
 enum CommentOrderByInput {
@@ -11,10 +11,13 @@ type GetCommentsByUrlArgs = {
   skip: number
   take: number
 }
-export async function getCommentsByUrl(
+export const getCommentsByUrl: ResolverFn<
+  Comment[],
+  GetCommentsByUrlArgs
+> = async function (
   parent,
   { url, filter, skip, take }: GetCommentsByUrlArgs,
-  { connection }: Context,
+  { connection },
   info
 ) {
   const comments = await connection

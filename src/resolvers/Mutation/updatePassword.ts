@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
-import { Context } from "../../../index"
+import { ResolverFn } from "resolvers"
 import { APP_SECRET, getUserId } from "../../utils"
 import { User } from "../../entity/User"
 
@@ -9,13 +9,15 @@ type UpdatedPasswordArgs = {
   password: string
   newPassword: string
 }
-export async function updatePassword(
-  parent,
-  args: UpdatedPasswordArgs,
-  { connection, ...context }: Context,
-  info
-) {
-  const userId = getUserId(context as Context)
+type UpdatedPasswordReturn = {
+  token: string
+  user: User
+}
+export const updatePassword: ResolverFn<
+  UpdatedPasswordReturn,
+  UpdatedPasswordArgs
+> = async function (parent, args, { connection, ...context }, info) {
+  const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
 
   const user = await connection
