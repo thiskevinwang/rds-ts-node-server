@@ -40,9 +40,9 @@ export const requestPasswordResetLink: ResolverFn<
    */
   if (user.last_password_request) {
     const now: number = new Date().getTime()
-    const lastPlusTen: number = user.last_password_request.getTime() + ms("1h")
-    if (now < lastPlusTen) {
-      const waitTime: string = ms(lastPlusTen - now)
+    const buffer: number = user.last_password_request.getTime() + ms("5m")
+    if (now < buffer) {
+      const waitTime: string = ms(buffer - now)
       throw new Error(`Please check your email, or try again in ${waitTime}`)
     }
   }
@@ -50,7 +50,7 @@ export const requestPasswordResetLink: ResolverFn<
   await connection.manager.save(user)
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "5ms",
   })
 
   const params: SESV2.SendEmailRequest = {

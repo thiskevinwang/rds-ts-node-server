@@ -1,12 +1,7 @@
 import { html } from "common-tags"
-
-import { User } from "../entity/User"
 import { Context } from "../../index"
+import { User } from "../entity/User"
 
-const DOMAIN =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:8001"
-    : "https://coffeecodeclimb.com"
 /**
  * This function generates the email HTML string.
  *
@@ -37,11 +32,12 @@ export const createPasswordResetEmailHTMLString = (
         A password reset has been requested for your account.
       </p>
       <ul>
+        <li>From: ${req.hostname}</li>
         <li>IP address: ${req.ip}</li>
         <li>Time: ${new Date().toString()}</li>
       </ul>
 
-      <a href=${DOMAIN}/auth/reset?token=${token}>
+      <a href=${req.protocol}://${req.hostname}/auth/reset?token=${token}>
         Reset Password
       </a>
       <!-- Footer -->
