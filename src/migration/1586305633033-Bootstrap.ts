@@ -1,9 +1,13 @@
 import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class Synchronize1585745154182 implements MigrationInterface {
-  name = "Synchronize1585745154182"
+export class Bootstrap1586305633033 implements MigrationInterface {
+  name = "Bootstrap1586305633033"
 
   public async up(queryRunner: QueryRunner): Promise<any> {
+    await queryRunner.query(
+      `CREATE TYPE "Reactions_variant_enum" AS ENUM('Like', 'Love', 'Haha', 'Wow', 'Sad', 'Angry', 'None')`,
+      undefined
+    )
     await queryRunner.query(
       `CREATE TABLE "Reactions" ("id" SERIAL NOT NULL, "created" TIMESTAMP NOT NULL DEFAULT now(), "updated" TIMESTAMP DEFAULT now(), "deleted" TIMESTAMP, "type" character varying NOT NULL DEFAULT 'Reaction', "variant" "Reactions_variant_enum" NOT NULL DEFAULT 'None', "commentId" integer NOT NULL, "userId" integer NOT NULL, CONSTRAINT "PK_8e7a9226a42a2a796ce5993a5a2" PRIMARY KEY ("id"))`,
       undefined
@@ -59,5 +63,6 @@ export class Synchronize1585745154182 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "Users"`, undefined)
     await queryRunner.query(`DROP TABLE "Comments"`, undefined)
     await queryRunner.query(`DROP TABLE "Reactions"`, undefined)
+    await queryRunner.query(`DROP TYPE "Reactions_variant_enum"`, undefined)
   }
 }
