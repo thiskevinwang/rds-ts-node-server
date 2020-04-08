@@ -9,7 +9,10 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly ./",
-    "format": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts",
+    "docker": "docker run -e POSTGRES_PASSWORD=mysecretpassword -d -p 8080:5432 mdillon/postgis:9.6-alpine",
+    "migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "seed": "ts-node ./scripts/generateAttempts.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
