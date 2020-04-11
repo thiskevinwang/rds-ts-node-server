@@ -26,7 +26,7 @@ export type RequestPasswordResetLinkArgs = {
 export const requestPasswordResetLink: ResolverFn<
   { message: string },
   RequestPasswordResetLinkArgs
-> = async function (parent, args, { connection, sesv2, req }, info) {
+> = async (parent, args, { connection, sesv2, req }, info) => {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")

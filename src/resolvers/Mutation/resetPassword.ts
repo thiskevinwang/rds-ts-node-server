@@ -11,9 +11,9 @@ type ResetPasswordArgs = {
   password: string
 }
 export const resetPassword: ResolverFn<
-  User,
+  User | undefined,
   ResetPasswordArgs
-> = async function (parent, args, { connection, ...context }, info) {
+> = async (parent, args, { connection, ...context }, info) => {
   const Authorization = context.req.get("Authorization")
   if (!Authorization) throw new Error("Missing header") // best practices?
 

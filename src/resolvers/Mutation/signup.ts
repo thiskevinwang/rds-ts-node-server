@@ -17,12 +17,12 @@ type SignupReturn = {
   token: string
   user: User
 }
-export const signup: ResolverFn<SignupReturn, SignupArgs> = async function (
+export const signup: ResolverFn<SignupReturn, SignupArgs> = async (
   parent,
   args,
   { connection },
   info
-) {
+) => {
   try {
     const password = await bcrypt.hash(args.password, 10)
     const user = new User()

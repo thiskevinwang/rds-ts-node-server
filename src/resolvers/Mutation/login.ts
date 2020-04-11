@@ -13,12 +13,12 @@ type LoginReturn = {
   token: string
   user: User
 }
-export const login: ResolverFn<LoginReturn, LoginArgs> = async function (
+export const login: ResolverFn<LoginReturn, LoginArgs> = async (
   parent,
   args,
   { connection },
   info
-) {
+) => {
   const user = await connection
     .getRepository(User)
     .createQueryBuilder("user")

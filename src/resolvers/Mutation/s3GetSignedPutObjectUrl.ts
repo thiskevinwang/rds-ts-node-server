@@ -17,7 +17,7 @@ type S3GetSignedPutObjectUrlReturn = {
 export const s3GetSignedPutObjectUrl: ResolverFn<
   S3GetSignedPutObjectUrlReturn,
   S3GetSignedPutObjectUrlArgs
-> = async function (parent, args, context, info) {
+> = async (parent, args, context, info) => {
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
   const { s3, connection } = context

@@ -10,10 +10,12 @@ type CreateAttemptArgs = {
   date: Date
 }
 
-export const createAttempt: ResolverFn<
-  Attempt,
-  CreateAttemptArgs
-> = async function (parent, { userId, send, grade, date }, context, info) {
+export const createAttempt: ResolverFn<Attempt, CreateAttemptArgs> = async (
+  parent,
+  { userId, send, grade, date },
+  context,
+  info
+) => {
   const { connection } = context
   /**
    * @todo use token from headers for userId

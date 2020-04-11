@@ -52,13 +52,13 @@ async function main() {
     name: "default",
     type: "postgres",
     host: process.env.RDS_DB_HOST,
-    port: parseInt(process.env.RDS_DB_PORT),
+    port: (process.env.RDS_DB_PORT as unknown) as number,
     username: process.env.RDS_DB_USERNAME,
     password: process.env.RDS_DB_PASSWORD,
     database: process.env.RDS_DB_DATABASE,
     // synchronize: true,
     logging: false,
-    entities: entities,
+    entities,
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
     cli: {
@@ -77,8 +77,8 @@ async function main() {
   }
 
   const server = new ApolloServer({
-    typeDefs: typeDefs,
-    resolvers: resolvers,
+    typeDefs,
+    resolvers,
     introspection: true,
     playground: true,
     /**

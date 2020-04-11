@@ -7,7 +7,7 @@ type GetAttemptsByUserIdArgs = {
 export const getAttemptsByUserId: ResolverFn<
   Attempt[],
   GetAttemptsByUserIdArgs
-> = async function (parent, { userId }, { connection }, info) {
+> = async (parent, { userId }, { connection }, info) => {
   const attempts = await connection
     .getRepository(Attempt)
     .createQueryBuilder("attempt")

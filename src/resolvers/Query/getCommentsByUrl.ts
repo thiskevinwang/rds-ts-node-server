@@ -14,12 +14,12 @@ type GetCommentsByUrlArgs = {
 export const getCommentsByUrl: ResolverFn<
   Comment[],
   GetCommentsByUrlArgs
-> = async function (
+> = async (
   parent,
   { url, filter, skip, take }: GetCommentsByUrlArgs,
   { connection },
   info
-) {
+) => {
   const comments = await connection
     .getRepository(Comment)
     .createQueryBuilder("comment")

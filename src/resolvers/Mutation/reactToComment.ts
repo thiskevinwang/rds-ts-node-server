@@ -10,10 +10,12 @@ type ReactToCommentArgs = {
   commentId: number
   variant: ReactionVariant
 }
-export const reactToComment: ResolverFn<
-  Reaction,
-  ReactToCommentArgs
-> = async function (parent, args, context, info) {
+export const reactToComment: ResolverFn<Reaction, ReactToCommentArgs> = async (
+  parent,
+  args,
+  context,
+  info
+) => {
   const { connection, pubsub } = context
   /** The one who is reacting */
   const userId = getUserId(context)

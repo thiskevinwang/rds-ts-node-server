@@ -16,7 +16,7 @@ type UpdatedPasswordReturn = {
 export const updatePassword: ResolverFn<
   UpdatedPasswordReturn,
   UpdatedPasswordArgs
-> = async function (parent, args, { connection, ...context }, info) {
+> = async (parent, args, { connection, ...context }, info) => {
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
 
