@@ -48,14 +48,20 @@ export interface Context {
 }
 
 async function main() {
-  const connection = await createConnection({
+  const host = process.env.RDS_DB_HOST
+  const port = parseInt(process.env.RDS_DB_PORT as string)
+  const username = process.env.RDS_DB_USERNAME
+  const password = process.env.RDS_DB_PASSWORD
+  const database = process.env.RDS_DB_DATABASE
+
+  let connection = await createConnection({
     name: "default",
     type: "postgres",
-    host: process.env.RDS_DB_HOST,
-    port: parseInt(process.env.RDS_DB_PORT),
-    username: process.env.RDS_DB_USERNAME,
-    password: process.env.RDS_DB_PASSWORD,
-    database: process.env.RDS_DB_DATABASE,
+    host,
+    port,
+    username,
+    password,
+    database,
     // synchronize: true,
     logging: false,
     entities: entities,
