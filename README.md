@@ -2,7 +2,8 @@
 
 ## Notes
 
-This api is consumed by 
+This api is consumed by
+
 - https://github.com/thiskevinwang/coffee-code-climb
 - https://github.com/thiskevinwang/you-suck-try-harder
 
@@ -19,8 +20,8 @@ You will need an `ormconfig` file in the root directory (next to `package.json`)
 ```yml
 default:
   type: "postgres"
-  host: "<rds-database-endpoint>"     # update this
-  port: 0000                          # update this
+  host: "<rds-database-endpoint>" # update this
+  port: 0000 # update this
   username: "<rds-database-username>" # update this
   password: "<rds-database-password>" # update this
   database: "postgres"
@@ -42,4 +43,10 @@ default:
     entitiesDir: "src/entity"
     migrationsDir: "src/migration"
     subscribersDir: "src/subscriber"
+```
+
+## TypeORM CLI Migrations
+
+```bash
+ts-node ./node_modules/typeorm/cli.js migration:generate -n Bootstrap
 ```

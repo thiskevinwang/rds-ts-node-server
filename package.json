@@ -21,13 +21,15 @@
     "@types/lodash": "^4.14.149",
     "@types/ms": "^0.7.31",
     "@types/node": "12.12.16",
-    "@types/pg": "^7.11.2",
+    "@types/pg": "^7.14.4",
     "prettier": "^2.0.2",
     "ts-node": "8.5.4",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@pgtyped/cli": "^0.8.1",
+    "@pgtyped/query": "^0.8.1",
     "apollo-server": "^2.9.13",
     "aws-sdk": "^2.592.0",
     "bcryptjs": "^2.4.3",
@@ -38,7 +40,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "ms": "^2.1.2",
-    "pg": "^7.14.0",
+    "pg": "^8.3.0",
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.21"
   },
