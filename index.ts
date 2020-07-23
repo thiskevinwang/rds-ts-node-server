@@ -6,7 +6,7 @@ import { createConnection, Connection } from "typeorm"
 import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
 
-import { typeDefs } from "./src/schema"
+import * as typeDefs from "./src/schema"
 import { resolvers } from "./src/resolvers"
 import { entities } from "./src/entity"
 
@@ -18,6 +18,30 @@ AWS.config.update({
   secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
 })
 const s3 = new AWS.S3()
+const dynamoDb = new AWS.DynamoDB({
+  apiVersion: "2012-08-10",
+  region: "localhost",
+  endpoint: "http://localhost:8081",
+  /**
+   * if connecting to the NoSQL Workbench DB, use these.
+   *
+   * if connecting to docker DB, leave empty
+   */
+  accessKeyId: "zeaq37",
+  secretAccessKey: "eyw4ab",
+})
+const docClient = new AWS.DynamoDB.DocumentClient({
+  apiVersion: "2012-08-10",
+  region: "localhost",
+  endpoint: "http://localhost:8081",
+  /**
+   * if connecting to the NoSQL Workbench DB, use these.
+   *
+   * if connecting to docker DB, leave empty
+   */
+  accessKeyId: "zeaq37",
+  secretAccessKey: "eyw4ab",
+})
 
 /**
  * # SES (project)
@@ -43,6 +67,8 @@ export interface Context {
   pubsub: PubSub
   s3: AWS.S3
   sesv2: AWS.SESV2
+  dynamoDb: AWS.DynamoDB
+  docClient: AWS.DynamoDB.DocumentClient
   req: Request
   res: Response
 }
@@ -77,7 +103,7 @@ async function main() {
   }
 
   const server = new ApolloServer({
-    typeDefs,
+    typeDefs: Object.values(typeDefs),
     resolvers,
     introspection: true,
     playground: true,
@@ -95,6 +121,7 @@ async function main() {
         pubsub,
         s3,
         sesv2,
+        dynamoDb,
       } as Context
     },
   })
