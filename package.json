@@ -9,6 +9,8 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly ./",
+    "dev:watch": "concurrently \"pgtyped -w -c config.json\" \"ts-node-dev --no-notify --respawn --transpileOnly ./\"",
+    "watch": "pgtyped -w -c config.json",
     "format": "prettier --write src/**/*.ts"
   },
   "devDependencies": {
@@ -34,6 +36,7 @@
     "aws-sdk": "^2.592.0",
     "bcryptjs": "^2.4.3",
     "common-tags": "^1.8.0",
+    "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "isomorphic-fetch": "^2.2.1",
@@ -41,6 +44,7 @@
     "lodash": "^4.17.15",
     "ms": "^2.1.2",
     "pg": "^8.3.0",
+    "postgres-migrations": "^4.0.3",
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.21"
   },
