@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne } from "typeorm"
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm"
 
 import { Base } from "./Base"
 import { Comment } from "./Comment"
@@ -14,7 +14,7 @@ export enum ReactionVariant {
   None = "None",
 }
 
-@Entity({ name: "Reactions" })
+@Entity({ name: "reactions" })
 export class Reaction extends Base {
   @Column({ default: "Reaction" })
   type: string = "Reaction"
@@ -27,8 +27,10 @@ export class Reaction extends Base {
   variant: ReactionVariant
 
   @ManyToOne(type => Comment, comment => comment.reactions, { nullable: false })
+  @JoinColumn({ name: "comment_id" })
   comment: Comment
 
   @ManyToOne(type => User, user => user.reactions, { nullable: false })
+  @JoinColumn({ name: "user_id" })
   user: User
 }

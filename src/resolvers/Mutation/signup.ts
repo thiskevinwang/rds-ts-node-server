@@ -36,16 +36,20 @@ export const signup: ResolverFn<SignupReturn, SignupArgs> = async function (
     const token = jwt.sign({ userId: user.id }, APP_SECRET)
 
     // Do we want to await here?
-    await fetch(process.env.API_GATEWAY, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      /**
-       * this ends up as the `event` object of the lambda function
-       */
-      body: JSON.stringify(user),
-    })
+    try {
+      await fetch(process.env.API_GATEWAY, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        /**
+         * this ends up as the `event` object of the lambda function
+         */
+        body: JSON.stringify(user),
+      })
+    } catch (e) {
+      console.error("POST to AWS API Gateway failed")
+    }
 
     return {
       token,

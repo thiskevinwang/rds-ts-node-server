@@ -5,7 +5,7 @@ import { Comment } from "./Comment"
 import { Reaction } from "./Reaction"
 import { Attempt } from "./Attempt"
 
-@Entity({ name: "Users" })
+@Entity({ name: "users" })
 export class User extends Base {
   @Column({ default: "User" })
   type: string = "User"
@@ -37,10 +37,14 @@ export class User extends Base {
   @Column({ nullable: true })
   banned: boolean
 
-  @OneToMany(type => Comment, comment => comment.user)
+  @OneToMany(type => Comment, comment => comment.user, {
+    cascade: true,
+  })
   comments: Comment[]
 
-  @OneToMany(type => Reaction, reaction => reaction.user)
+  @OneToMany(type => Reaction, reaction => reaction.user, {
+    cascade: true,
+  })
   reactions: Reaction[]
 
   @OneToMany(type => Attempt, attempt => attempt.user, {

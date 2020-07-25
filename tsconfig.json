@@ -4,7 +4,7 @@
     "paths": {
       "*": ["*", "src/*"]
     },
-    "lib": ["es5", "es6"],
+    "lib": ["ESNext"],
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",

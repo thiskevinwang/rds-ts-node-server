@@ -11,14 +11,20 @@ import { Attempt } from "../src/entity/Attempt"
 import { User } from "../src/entity/User"
 
 async function main() {
+  const host = process.env.RDS_DB_HOST
+  const port = parseInt(process.env.RDS_DB_PORT as string)
+  const username = process.env.RDS_DB_USERNAME
+  const password = process.env.RDS_DB_PASSWORD
+  const database = process.env.RDS_DB_DATABASE
+
   const connection = await createConnection({
     name: "default",
     type: "postgres",
-    host: process.env.RDS_DB_HOST,
-    port: parseInt(process.env.RDS_DB_PORT),
-    username: process.env.RDS_DB_USERNAME,
-    password: process.env.RDS_DB_PASSWORD,
-    database: process.env.RDS_DB_DATABASE,
+    host,
+    port,
+    username,
+    password,
+    database,
     synchronize: true,
     logging: false,
     entities: entities,
@@ -32,19 +38,19 @@ async function main() {
   })
 
   let user: User
-  user = await connection
+  user = (await connection
     .getRepository(User)
     .createQueryBuilder("user")
     .where("user.id = :id", { id: 1 })
-    .getOne()
+    .getOne()) as User
 
   if (!user) {
     user = new User()
-    user.first_name = process.env.TEST_FIRST_NAME
-    user.last_name = process.env.TEST_LAST_NAME
-    user.email = process.env.TEST_EMAIL
-    user.password = await bcrypt.hash(process.env.TEST_PASSWORD, 10)
-    user.username = process.env.TEST_USERNAME
+    user.first_name = process.env.TEST_FIRST_NAME as string
+    user.last_name = process.env.TEST_LAST_NAME as string
+    user.email = process.env.TEST_EMAIL as string
+    user.password = await bcrypt.hash(process.env.TEST_PASSWORD as string, 10)
+    user.username = process.env.TEST_USERNAME as string
   }
 
   const days = Array(365)
