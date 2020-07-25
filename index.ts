@@ -5,6 +5,7 @@ import { ApolloServer, PubSub } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
 import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
+import { Client } from "pg"
 
 import { typeDefs } from "./src/schema"
 import { resolvers } from "./src/resolvers"
@@ -40,6 +41,7 @@ const sesv2 = new AWS.SESV2()
 
 export interface Context {
   connection: Connection
+  client: Client
   pubsub: PubSub
   s3: AWS.S3
   sesv2: AWS.SESV2
@@ -54,33 +56,53 @@ async function main() {
   const password = process.env.RDS_DB_PASSWORD
   const database = process.env.RDS_DB_DATABASE
 
-  let connection = await createConnection({
-    name: "default",
-    type: "postgres",
-    host,
-    port,
-    username,
-    password,
-    database,
-    // synchronize: true,
-    logging: false,
-    entities: entities,
-    migrations: ["src/migration/**/*.ts"],
-    subscribers: ["src/subscriber/**/*.ts"],
-    cli: {
-      entitiesDir: "src/entity",
-      migrationsDir: "src/migration",
-      subscribersDir: "src/subscriber",
-    },
-  })
-
-  if (connection.isConnected) {
-    console.log("✔ Connected to RDS")
-    console.log(
-      "Entity names:",
-      connection.entityMetadatas.map(e => e.name)
-    )
+  const makePgClientConnection = async () => {
+    const client = new Client({
+      host,
+      port,
+      user: username,
+      password,
+      database,
+    })
+    await client.connect()
+    return client
   }
+
+  const makeTypeORMConnection = async () => {
+    let connection = await createConnection({
+      name: "default",
+      type: "postgres",
+      host,
+      port,
+      username,
+      password,
+      database,
+      // synchronize: true,
+      logging: false,
+      entities: entities,
+      migrations: ["src/migration/**/*.ts"],
+      subscribers: ["src/subscriber/**/*.ts"],
+      cli: {
+        entitiesDir: "src/entity",
+        migrationsDir: "src/migration",
+        subscribersDir: "src/subscriber",
+      },
+    })
+
+    if (connection.isConnected) {
+      console.log("✔ Connected to RDS")
+      console.log(
+        "Entity names:",
+        connection.entityMetadatas.map(e => e.tableName)
+      )
+    }
+    return connection
+  }
+
+  const [{ value: client }, { value: connection }] = await Promise.allSettled([
+    makePgClientConnection(),
+    makeTypeORMConnection(),
+  ])
 
   const server = new ApolloServer({
     typeDefs: typeDefs,
@@ -97,6 +119,7 @@ async function main() {
     context: request => {
       return {
         ...request,
+        client,
         connection,
         pubsub,
         s3,
