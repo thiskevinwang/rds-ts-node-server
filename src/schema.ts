@@ -40,6 +40,7 @@ export const typeDefs = gql`
     avatar_url: String
     comments: [Comment]
     reactions: [Reaction]
+    attempts: [Attempt]
   }
 
   enum CommentOrderByInput {

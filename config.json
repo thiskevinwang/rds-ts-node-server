@@ -6,7 +6,7 @@
       "emitTemplate": "{{dir}}/{{name}}.queries.ts"
     }
   ],
-  "srcDir": "./scripts/",
+  "srcDir": "./src",
   "failOnError": false,
   "db": {
     "host": "localhost",
