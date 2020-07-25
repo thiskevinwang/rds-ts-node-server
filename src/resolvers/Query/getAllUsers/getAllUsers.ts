@@ -19,17 +19,18 @@ export const getAllUsers: ResolverFn = async function (
           userId: user.id,
         }
 
-        const [
-          { value: attempts },
-          { value: comments },
-          { value: reactions },
-        ] = await Promise.allSettled([
+        const [aRes, cRes, rRes] = await Promise.allSettled([
           getAttemptsForUserId.run(params, client),
           getCommentsForUserId.run(params, client),
           getReactionsForUserId.run(params, client),
         ])
 
-        return { ...user, attempts, comments, reactions }
+        return {
+          ...user,
+          attempts: aRes.status === "fulfilled" && aRes.value,
+          comments: cRes.status === "fulfilled" && cRes.value,
+          reactions: rRes.status === "fulfilled" && rRes.value,
+        }
       })
     })
 
