@@ -49,6 +49,6 @@
     "typeorm": "0.2.21"
   },
   "engines": {
-    "node": "12.18.x"
+    "node": "12.x"
   }
 }
