@@ -99,10 +99,10 @@ async function main() {
     return connection
   }
 
-  const [{ value: client }, { value: connection }] = await Promise.allSettled([
+  const [{ value: client }, { value: connection }] = (await Promise.allSettled([
     makePgClientConnection(),
     makeTypeORMConnection(),
-  ])
+  ])) as [PromiseFulfilledResult<Client>, PromiseFulfilledResult<Connection>]
 
   const server = new ApolloServer({
     typeDefs: typeDefs,
