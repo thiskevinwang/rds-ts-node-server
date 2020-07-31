@@ -50,3 +50,10 @@ default:
 ```bash
 ts-node ./node_modules/typeorm/cli.js migration:generate -n Bootstrap
 ```
+
+## Fish Command to Generate Migration File
+
+```bash
+# fish
+touch ./migrations/(date +"%Y%m%d%H%M")-Init.sql
+```
