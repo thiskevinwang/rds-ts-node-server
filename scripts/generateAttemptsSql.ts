@@ -5,11 +5,7 @@ import * as bcrypt from "bcryptjs"
 import ms from "ms"
 import _ from "lodash"
 
-import {
-  getUserById,
-  insertTestUser,
-  IInsertTestUserParams,
-} from "./seed/users.queries"
+import { getOrCreateUser, IGetOrCreateUserParams } from "./seed/users.queries"
 import {
   insertAttemptForUserId,
   IInsertAttemptForUserIdParams,
@@ -28,6 +24,14 @@ const client = new Client({
   database,
 })
 
+const USER_ID = "a5f5d36a-6677-41c2-85b8-7578b4d98972"
+const days = Array(365)
+  .fill(null)
+  .map((e, i) => {
+    const date = new Date(new Date().getTime() - ms(`${364 - i} days`))
+    return { date }
+  })
+
 /**
  * ### To clean up the DB
  * ```sql
@@ -44,50 +48,54 @@ async function main() {
   await client.connect()
 
   try {
-    const userId = "a5f5d36a-6677-41c2-85b8-7578b4d98972"
+    console.log("🔎 Looking for user: ", USER_ID)
+    await client.query("BEGIN")
 
-    const users = await getUserById.run({ userId }, client)
-    console.log(users)
-    if (users.length < 1) {
-      let params = { user: {} } as IInsertTestUserParams
-      params.user.firstName = process.env.TEST_FIRST_NAME as string
-      params.user.lastName = process.env.TEST_LAST_NAME as string
-      params.user.email = process.env.TEST_EMAIL as string
-      params.user.password = await bcrypt.hash(
-        process.env.TEST_PASSWORD as string,
-        10
-      )
-      params.user.username = process.env.TEST_USERNAME as string
+    let params = { user: {} } as IGetOrCreateUserParams
+    params.user.id = USER_ID
+    params.user.firstName = process.env.TEST_FIRST_NAME as string
+    params.user.lastName = process.env.TEST_LAST_NAME as string
+    params.user.email = process.env.TEST_EMAIL as string
+    params.user.password = await bcrypt.hash(
+      process.env.TEST_PASSWORD as string,
+      10
+    )
+    params.user.username = process.env.TEST_USERNAME as string
 
-      const testUser = await insertTestUser.run(params, client)
-      console.log("testUser", testUser)
+    const [user] = await getOrCreateUser.run(params, client)
+    console.log(`#️⃣ User: `, user?.id)
+
+    console.log("🏋️‍ Generating attempts for user: ", USER_ID)
+    console.warn("- 😳 Note: This is not idempotent")
+
+    {
+      console.time("⏰ Generating attempts took")
+      const outer = days.map(({ date }) => {
+        const inner = Array(_.random(0, 40))
+          .fill(null)
+          .map(() => {
+            let params = { attempt: {} } as IInsertAttemptForUserIdParams
+            params.attempt.grade = _.random(0, 10)
+            params.attempt.send = [true, false][_.random(0, 1)]
+            params.attempt.userId = USER_ID
+            params.attempt.date = date
+
+            return insertAttemptForUserId.run(params, client)
+          })
+        return Promise.allSettled(inner)
+      })
+      await Promise.allSettled(outer)
+      console.timeEnd("⏰ Generating attempts took")
     }
 
-    const days = Array(365)
-      .fill(null)
-      .map((e, i) => {
-        const date = new Date(new Date().getTime() - ms(`${364 - i} days`))
-        return { date }
-      })
-
-    const outer = days.map(({ date }) => {
-      const inner = Array(_.random(0, 40))
-        .fill(null)
-        .map(() => {
-          let params = { attempt: {} } as IInsertAttemptForUserIdParams
-          params.attempt.grade = _.random(0, 10)
-          params.attempt.send = [true, false][_.random(0, 1)]
-          params.attempt.userId = userId
-          params.attempt.date = date
-
-          return insertAttemptForUserId.run(params, client)
-        })
-      return Promise.allSettled(inner)
-    })
-
-    const bar = await Promise.allSettled(outer)
-    console.log("bar", bar)
+    await client.query("COMMIT")
+    console.log(`✅ COMMIT "user & attempts"`)
+  } catch (e) {
+    console.log(`Error: `, e)
+    console.log(`❌ ROLLBACK "user & attempts"...`)
+    await client.query("ROLLBACK")
   } finally {
+    console.log(`✨ Done`)
     await client.end()
   }
 }
