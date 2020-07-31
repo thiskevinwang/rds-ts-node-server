@@ -1,5 +1,5 @@
 import { ResolverFn } from "resolvers"
-import { Comment } from "src/entity/Comment"
+import { Comment } from "entity/Comment"
 
 export const getAllComments: ResolverFn<Comment[]> = async function (
   parent,

@@ -4,8 +4,8 @@ import ms from "ms"
 import { SESV2 } from "aws-sdk"
 
 import { ResolverFn } from "resolvers"
-import { APP_SECRET } from "src/utils"
-import { User } from "src/entity/User"
+import { APP_SECRET } from "utils"
+import { User } from "entity/User"
 
 type ResetPasswordArgs = {
   password: string

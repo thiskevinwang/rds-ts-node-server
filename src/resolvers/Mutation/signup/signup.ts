@@ -3,7 +3,7 @@ import * as bcrypt from "bcryptjs"
 
 import { ResolverFn } from "resolvers"
 import { APP_SECRET } from "utils"
-import { User } from "src/entity/User"
+import { User } from "entity/User"
 
 type SignupArgs = {
   password: string

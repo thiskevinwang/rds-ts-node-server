@@ -2,8 +2,8 @@ import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
 import { ResolverFn } from "resolvers"
-import { APP_SECRET, TokenPayload } from "src/utils"
-import { User } from "src/entity/User"
+import { APP_SECRET, TokenPayload } from "utils"
+import { User } from "entity/User"
 
 type LoginArgs = {
   password: string

@@ -1,5 +1,5 @@
 import { ResolverFn } from "resolvers"
-import { User } from "src/entity/User"
+import { User } from "entity/User"
 
 export const getFirstUser: ResolverFn<User> = async function (
   parent,

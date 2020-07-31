@@ -1,6 +1,6 @@
 import { ResolverFn } from "resolvers"
-import { getUserId } from "src/utils"
-import { User } from "src/entity/User"
+import { getUserId } from "utils"
+import { User } from "entity/User"
 
 type UpdateUserAvatarArgs = {
   avatarUrl: string

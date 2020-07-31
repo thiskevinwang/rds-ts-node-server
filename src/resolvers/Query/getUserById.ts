@@ -1,5 +1,5 @@
 import { ResolverFn } from "resolvers"
-import { User } from "src/entity/User"
+import { User } from "entity/User"
 
 type GetUserByIdArgs = { id: string }
 export const getUserById: ResolverFn<User, GetUserByIdArgs> = async function (
