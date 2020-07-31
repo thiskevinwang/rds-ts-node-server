@@ -7,9 +7,9 @@ import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
 import { Client } from "pg"
 
-import { typeDefs } from "./src/schema"
-import { resolvers } from "./src/resolvers"
-import { entities } from "./src/entity"
+import { typeDefs } from "./schema"
+import { resolvers } from "./resolvers"
+import { entities } from "./entity"
 
 const pubsub = new PubSub()
 

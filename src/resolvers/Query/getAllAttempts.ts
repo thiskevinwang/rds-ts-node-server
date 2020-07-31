@@ -1,5 +1,5 @@
 import { ResolverFn } from "resolvers"
-import { Attempt } from "../../entity/Attempt"
+import { Attempt } from "src/entity/Attempt"
 
 export const getAllAttempts: ResolverFn<Attempt[]> = async function (
   parent,

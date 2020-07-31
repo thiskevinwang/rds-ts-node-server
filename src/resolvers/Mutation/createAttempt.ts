@@ -1,7 +1,7 @@
 import { ResolverFn } from "resolvers"
-import { getUserId } from "../../utils"
-import { User } from "../../entity/User"
-import { Attempt } from "../../entity/Attempt"
+import { getUserId } from "src/utils"
+import { User } from "src/entity/User"
+import { Attempt } from "src/entity/Attempt"
 
 type CreateAttemptArgs = {
   userId: number

@@ -1,7 +1,7 @@
 import { html } from "common-tags"
 
-import { User } from "../entity/User"
-import { Context } from "../../index"
+import { User } from "src/entity/User"
+import { Context } from "src/"
 
 const DOMAIN =
   process.env.NODE_ENV !== "production"

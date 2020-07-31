@@ -1,8 +1,8 @@
 import { ResolverFn } from "resolvers"
-import { getUserId } from "../../utils"
-import { User } from "../../entity/User"
-import { Comment } from "../../entity/Comment"
-import { NEW_COMMENT } from "../eventLabels"
+import { getUserId } from "src/utils"
+import { User } from "src/entity/User"
+import { Comment } from "src/entity/Comment"
+import { NEW_COMMENT } from "src/resolvers/eventLabels"
 
 export const createComment: ResolverFn<Comment> = async function (
   parent,

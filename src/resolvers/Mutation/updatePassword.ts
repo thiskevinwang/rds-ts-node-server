@@ -2,8 +2,8 @@ import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
 import { ResolverFn } from "resolvers"
-import { APP_SECRET, getUserId } from "../../utils"
-import { User } from "../../entity/User"
+import { APP_SECRET, getUserId } from "src/utils"
+import { User } from "src/entity/User"
 
 type UpdatedPasswordArgs = {
   password: string

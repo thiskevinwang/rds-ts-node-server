@@ -1,8 +1,8 @@
 import { ResolverFn } from "resolvers"
-import { getUserId } from "../../utils"
-import { User } from "../../entity/User"
-import { Comment } from "../../entity/Comment"
-import { Reaction, ReactionVariant } from "../../entity/Reaction"
+import { getUserId } from "src/utils"
+import { User } from "src/entity/User"
+import { Comment } from "src/entity/Comment"
+import { Reaction, ReactionVariant } from "src/entity/Reaction"
 
 import { NEW_REACTION } from "../eventLabels"
 

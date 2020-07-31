@@ -1,5 +1,5 @@
 import { ResolverFn } from "resolvers"
-import { Reaction } from "../../entity/Reaction"
+import { Reaction } from "src/entity/Reaction"
 
 export const getAllReactions: ResolverFn<Reaction[]> = async function (
   parent,
