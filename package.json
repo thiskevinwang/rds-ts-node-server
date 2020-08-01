@@ -11,7 +11,7 @@
     "dev": "NODE_PATH=./src ts-node-dev --no-notify --respawn --transpileOnly ./src/index.ts",
     "dev:watch": "NODE_PATH=./src concurrently \"pgtyped -w -c config.json\" \"ts-node-dev --no-notify --respawn --transpileOnly ./src/index.ts\"",
     "dev:migrations": "ts-node scripts/migration.ts",
-    "dev:container": "docker run --name postboi -e POSTGRES_PASSWORD=mysecretpassword -d -p 8080:5432 postgres:13-alpine",
+    "dev:container": "docker run --rm --name postboi -e POSTGRES_PASSWORD=mysecretpassword -d -p 8080:5432 postgres:13-alpine",
     "watch": "pgtyped -w -c config.json",
     "format": "prettier --write src/**/*.ts"
   },
