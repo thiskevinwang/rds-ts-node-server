@@ -3,7 +3,13 @@ import * as bcrypt from "bcryptjs"
 
 import { ResolverFn } from "resolvers"
 import { APP_SECRET, getUserId } from "utils"
-import { User } from "entity/User"
+
+import {
+  getUserById,
+  IGetUserByIdResult,
+  updatePasswordForUserId,
+  IUpdatePasswordForUserIdParams,
+} from "./updatePassword.queries"
 
 type UpdatedPasswordArgs = {
   password: string
@@ -11,21 +17,17 @@ type UpdatedPasswordArgs = {
 }
 type UpdatedPasswordReturn = {
   token: string
-  user: User
+  user: IGetUserByIdResult
 }
 export const updatePassword: ResolverFn<
   UpdatedPasswordReturn,
   UpdatedPasswordArgs
-> = async function (parent, args, { connection, ...context }, info) {
+> = async function (parent, args, { connection, client, ...context }, info) {
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
 
-  const user = await connection
-    .getRepository(User)
-    .createQueryBuilder("user")
-    .where("user.id = :id", { id: userId })
-    .addSelect("user.password")
-    .getOne()
+  const [user] = await getUserById.run({ userId }, client)
+  console.log(user)
   if (!user) throw new Error("Invalid email or password")
 
   try {
@@ -39,10 +41,14 @@ export const updatePassword: ResolverFn<
     throw new Error("Please use a new, unique password")
   }
 
-  const newPassword = await bcrypt.hash(args.newPassword, 10)
+  const newHash = await bcrypt.hash(args.newPassword, 10)
 
-  user.password = newPassword
-  await connection.manager.save(user)
+  const params: IUpdatePasswordForUserIdParams = {
+    userId,
+    newHash,
+  }
+
+  await updatePasswordForUserId.run(params, client)
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
 
