@@ -1,6 +1,6 @@
 {
   "name": "rds-ts-node-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An Apollo Server that uses TypeORM to connect to an RDS-postgres instance",
   "author": "kwangsan@gmail.com",
   "main": "src/index.ts",
