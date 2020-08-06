@@ -1,5 +1,5 @@
 import { ResolverFn } from "resolvers"
-import { Comment } from "../../entity/Comment"
+import { Comment } from "entity/Comment"
 
 enum CommentOrderByInput {
   created_ASC = "created_ASC",

@@ -1,4 +1,4 @@
-import { Context } from "../../index"
+import { Context } from "src/"
 import * as Subscription from "./Subscription"
 import * as Query from "./Query"
 import * as Mutation from "./Mutation"

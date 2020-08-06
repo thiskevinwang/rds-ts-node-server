@@ -1,6 +1,6 @@
 import { ResolverFn } from "resolvers"
-import { getUserId } from "../../utils"
-import { User } from "../../entity/User"
+import { getUserId } from "utils"
+import { User } from "entity/User"
 
 type S3GetSignedPutObjectUrlArgs = {
   fileName: string

@@ -1,8 +1,15 @@
 import { gql } from "apollo-server"
 
-export const typeDefs = gql`
-  scalar Date
+export const directivesTypeDef = gql`
+  directive @development on FIELD_DEFINITION
+  directive @auth on FIELD_DEFINITION
+`
 
+export const dateScalarTypeDef = gql`
+  scalar Date
+`
+
+export const typeDefs = gql`
   type S3Payload {
     """
     #### Example
@@ -30,7 +37,7 @@ export const typeDefs = gql`
     id: ID!
     username: String!
     email: String!
-    password: String
+    password: String @development
     first_name: String!
     last_name: String!
     created: Date!

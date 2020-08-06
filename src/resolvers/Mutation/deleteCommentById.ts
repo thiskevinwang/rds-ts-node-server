@@ -1,6 +1,6 @@
 import { ResolverFn } from "resolvers"
-import { getUserId } from "../../utils"
-import { Comment } from "../../entity/Comment"
+import { getUserId } from "utils"
+import { Comment } from "entity/Comment"
 
 export const deleteCommentById: ResolverFn<Comment> = async function (
   parent,

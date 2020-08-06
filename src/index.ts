@@ -7,9 +7,10 @@ import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
 import { Client } from "pg"
 
-import { typeDefs } from "./src/schema"
-import { resolvers } from "./src/resolvers"
-import { entities } from "./src/entity"
+import * as typeDefs from "./schema"
+import { resolvers } from "./resolvers"
+import { entities } from "./entity"
+import { AuthDirective, DevelopmentDirective } from "./directives"
 
 const pubsub = new PubSub()
 
@@ -108,7 +109,11 @@ async function main() {
   const connection = connectionRes.status === "fulfilled" && connectionRes.value
 
   const server = new ApolloServer({
-    typeDefs: typeDefs,
+    schemaDirectives: {
+      development: DevelopmentDirective,
+      auth: AuthDirective,
+    },
+    typeDefs: Object.values(typeDefs),
     resolvers: resolvers,
     introspection: true,
     playground: true,

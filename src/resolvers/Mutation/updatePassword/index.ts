@@ -1,0 +1,1 @@
+export { updatePassword } from "./updatePassword"

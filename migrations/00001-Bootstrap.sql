@@ -1,5 +1,13 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+BEGIN;
+DO $$ BEGIN
+	CREATE TYPE "Reactions_variant_enum"
+		AS ENUM ('Like', 'Love', 'Haha', 'Wow', 'Sad', 'Angry', 'None');
+EXCEPTION
+	WHEN duplicate_object THEN
+		RAISE NOTICE 'Reactions_variant_enum already exists. Skipping...';
+END $$;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS "reactions" (
   "id" uuid DEFAULT uuid_generate_v4 (),
   "created" timestamp NOT NULL DEFAULT now(),
@@ -11,7 +19,6 @@ CREATE TABLE IF NOT EXISTS "reactions" (
   "user_id" uuid NOT NULL,
   CONSTRAINT "pk_reactions_id" PRIMARY KEY ("id")
 );
-
 CREATE TABLE IF NOT EXISTS "comments" (
   "id" uuid DEFAULT uuid_generate_v4 (),
   "created" timestamp NOT NULL DEFAULT now(),
@@ -23,7 +30,6 @@ CREATE TABLE IF NOT EXISTS "comments" (
   "user_id" uuid NOT NULL,
   CONSTRAINT "pk_comments_id" PRIMARY KEY ("id")
 );
-
 CREATE TABLE IF NOT EXISTS "users" (
   "id" uuid DEFAULT uuid_generate_v4 (),
   "created" timestamp NOT NULL DEFAULT now(),
@@ -43,7 +49,6 @@ CREATE TABLE IF NOT EXISTS "users" (
   CONSTRAINT "uq_users_email" UNIQUE ("email"),
   CONSTRAINT "pk_users_id" PRIMARY KEY ("id")
 );
-
 CREATE TABLE IF NOT EXISTS "attempts" (
   "id" uuid DEFAULT uuid_generate_v4 (),
   "created" timestamp NOT NULL DEFAULT now(),
@@ -56,7 +61,6 @@ CREATE TABLE IF NOT EXISTS "attempts" (
   "user_id" uuid NOT NULL,
   CONSTRAINT "pk_attempts_id" PRIMARY KEY ("id")
 );
-
 -- reactions
 DO $$
 BEGIN
@@ -67,7 +71,6 @@ EXCEPTION
     RAISE NOTICE 'Constraint already exists. Ignoring...';
 END
 $$;
-
 DO $$
 BEGIN
   ALTER TABLE "reactions"
@@ -77,7 +80,6 @@ EXCEPTION
     RAISE NOTICE 'Constraint already exists. Ignoring...';
 END
 $$;
-
 -- comments
 DO $$
 BEGIN
@@ -88,7 +90,6 @@ EXCEPTION
     RAISE NOTICE 'Constraint already exists. Ignoring...';
 END
 $$;
-
 -- Attempts
 DO $$
 BEGIN
@@ -99,4 +100,5 @@ EXCEPTION
     RAISE NOTICE 'Constraint already exists. Ignoring...';
 END
 $$;
+COMMIT;
 

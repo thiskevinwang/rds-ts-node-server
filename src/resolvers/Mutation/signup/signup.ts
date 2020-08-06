@@ -3,8 +3,13 @@ import * as bcrypt from "bcryptjs"
 import fetch from "isomorphic-fetch"
 
 import { ResolverFn } from "resolvers"
-import { APP_SECRET } from "../../utils"
-import { User } from "../../entity/User"
+import { APP_SECRET } from "utils"
+
+import {
+  createUser,
+  ICreateUserParams,
+  ICreateUserResult,
+} from "./signup.queries"
 
 type SignupArgs = {
   password: string
@@ -15,24 +20,26 @@ type SignupArgs = {
 }
 type SignupReturn = {
   token: string
-  user: User
+  user: ICreateUserResult
 }
 export const signup: ResolverFn<SignupReturn, SignupArgs> = async function (
   parent,
-  args,
-  { connection },
+  { username, firstName, lastName, email, password },
+  { client },
   info
 ) {
   try {
-    const password = await bcrypt.hash(args.password, 10)
-    const user = new User()
-    user.username = args.username
-    user.password = password
-    user.first_name = args.firstName
-    user.last_name = args.lastName
-    user.email = args.email
-    await connection.manager.save(user)
-
+    const hash = await bcrypt.hash(password, 10)
+    const params: ICreateUserParams = {
+      user: {
+        username,
+        password: hash,
+        firstName,
+        lastName,
+        email,
+      },
+    }
+    const [user] = await createUser.run(params, client)
     const token = jwt.sign({ userId: user.id }, APP_SECRET)
 
     // Do we want to await here?

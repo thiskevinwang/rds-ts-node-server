@@ -1,11 +1,11 @@
 import "dotenv/config"
 import * as jwt from "jsonwebtoken"
 
-import { Context } from "../index"
+import { Context } from "src/"
 
 export const APP_SECRET = process.env.APP_SECRET
 
-export type TokenPayload = { userId: number }
+export type TokenPayload = { userId: string }
 
 /**
  * This grabs the `{ userId }` from the jwt in a
@@ -18,7 +18,7 @@ export type TokenPayload = { userId: number }
  *   - "invalid signature"
  * @param context the context object from a graphql resolver
  */
-export function getUserId(context: Pick<Context, "req">): number {
+export function getUserId(context: Pick<Context, "req">): string {
   const Authorization = context.req.get("Authorization")
   if (Authorization) {
     const token = Authorization.replace("Bearer ", "")
