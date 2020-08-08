@@ -1,6 +1,6 @@
-import { ResolverFn } from "resolvers"
-import { getUserId } from "utils"
-import { NEW_COMMENT } from "resolvers/eventLabels"
+import { ResolverFn } from "../.."
+import { getUserId } from "../../../utils"
+import { NEW_COMMENT } from "../../eventLabels"
 import {
   getUserById,
   insertCommentForUser,

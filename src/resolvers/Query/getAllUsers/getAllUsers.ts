@@ -1,4 +1,4 @@
-import { ResolverFn } from "resolvers"
+import { ResolverFn } from "../.."
 import {
   getAllUsers as getAllUsersQuery,
   getAttemptsForUserId,

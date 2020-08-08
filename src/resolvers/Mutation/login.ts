@@ -1,9 +1,9 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
-import { ResolverFn } from "resolvers"
-import { APP_SECRET, TokenPayload } from "utils"
-import { User } from "entity/User"
+import { ResolverFn } from ".."
+import { APP_SECRET, TokenPayload } from "../../utils"
+import { User } from "../../entity/User"
 
 type LoginArgs = {
   password: string
@@ -35,7 +35,7 @@ export const login: ResolverFn<LoginReturn, LoginArgs> = async function (
   }
 
   return {
-    token: jwt.sign({ userId: user.id } as TokenPayload, APP_SECRET),
+    token: jwt.sign({ userId: user.id }, APP_SECRET),
     user,
   }
 }

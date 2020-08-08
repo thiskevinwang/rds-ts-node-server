@@ -1,7 +1,7 @@
 import { SchemaDirectiveVisitor } from "apollo-server"
 import { GraphQLField, defaultFieldResolver } from "graphql"
 
-import { getUserId } from "utils"
+import { getUserId } from "../utils"
 
 const AUTH_ERROR = "🔒 This field requires you to be authenticated"
 /**
