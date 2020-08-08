@@ -2,9 +2,9 @@ import * as jwt from "jsonwebtoken"
 import ms from "ms"
 import { SESV2 } from "aws-sdk"
 
-import { ResolverFn } from "resolvers"
-import { APP_SECRET } from "utils"
-import { User } from "entity/User"
+import { ResolverFn } from ".."
+import { APP_SECRET } from "../../utils"
+import { User } from "../../entity/User"
 import { createPasswordResetEmailHTMLString } from "../password_reset_email"
 
 export type RequestPasswordResetLinkArgs = {

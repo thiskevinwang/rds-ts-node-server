@@ -9,4 +9,6 @@ temp/
 ormconfig.*
 
 .env
-./scripts/*
+scripts/
+migrations/
+config.json

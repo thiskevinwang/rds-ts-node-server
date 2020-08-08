@@ -2,8 +2,8 @@ import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 import fetch from "isomorphic-fetch"
 
-import { ResolverFn } from "resolvers"
-import { APP_SECRET } from "utils"
+import { ResolverFn } from "../.."
+import { APP_SECRET } from "../../../utils"
 
 import {
   createUser,

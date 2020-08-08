@@ -7,11 +7,29 @@ import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
 import { Client } from "pg"
 
-import * as typeDefs from "./schema"
-import { resolvers } from "./resolvers"
-import { entities } from "./entity"
-import { AuthDirective, DevelopmentDirective } from "./directives"
+import * as typeDefs from "./src/schema"
+import { resolvers } from "./src/resolvers"
+import { entities } from "./src/entity"
+import { AuthDirective, DevelopmentDirective } from "./src/directives"
+import { DocumentNode, GraphQLSchema } from "graphql"
 
+export interface ExecutionParams<TContext = any> {
+  query: string | DocumentNode
+  variables: {
+    [key: string]: any
+  }
+  operationName: string
+  context: TContext
+  formatResponse?: Function
+  formatError?: Function
+  callback?: Function
+  schema?: GraphQLSchema
+}
+interface ExpressContext {
+  req: Request
+  res: Response
+  connection?: ExecutionParams
+}
 const pubsub = new PubSub()
 
 AWS.config.update({
@@ -124,9 +142,19 @@ async function main() {
      *   already exists.
      * @see https://www.apollographql.com/docs/apollo-server/data/data/#context-argument
      */
-    context: request => {
+    context: (ctx: ExpressContext) => {
+      /**
+       * custom headers
+       * @see https://stackoverflow.com/a/60114804/9823455
+       */
+      ctx.res.header("Set-Cookie", "wtf=hellooooo")
+      // ctx.res.header(
+      //   "Access-Control-Allow-Origin",
+      //   "https://you-suck-try-harder.now.sh"
+      // )
+      // ctx.res.header("Access-Control-Allow-Credentials", "true")
       return {
-        ...request,
+        ...ctx,
         client,
         connection,
         pubsub,

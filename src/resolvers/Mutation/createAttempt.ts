@@ -1,7 +1,7 @@
-import { ResolverFn } from "resolvers"
-import { getUserId } from "utils"
-import { User } from "entity/User"
-import { Attempt } from "entity/Attempt"
+import { ResolverFn } from ".."
+import { getUserId } from "../../utils"
+import { User } from "../../entity/User"
+import { Attempt } from "../../entity/Attempt"
 
 type CreateAttemptArgs = {
   userId: number

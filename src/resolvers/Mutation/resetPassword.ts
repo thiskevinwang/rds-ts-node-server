@@ -3,9 +3,9 @@ import * as bcrypt from "bcryptjs"
 import ms from "ms"
 import { SESV2 } from "aws-sdk"
 
-import { ResolverFn } from "resolvers"
-import { APP_SECRET } from "utils"
-import { User } from "entity/User"
+import { ResolverFn } from ".."
+import { APP_SECRET } from "../../utils"
+import { User } from "../../entity/User"
 
 type ResetPasswordArgs = {
   password: string

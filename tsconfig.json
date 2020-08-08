@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "*": ["*", "src/*"]
+      "*": ["src/*"]
     },
     "lib": ["ESNext"],
     "target": "es5",
@@ -14,6 +14,6 @@
     "sourceMap": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["scripts", "migrations"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

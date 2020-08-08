@@ -1,8 +1,8 @@
 import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
-import { ResolverFn } from "resolvers"
-import { APP_SECRET, getUserId } from "utils"
+import { ResolverFn } from "../../"
+import { APP_SECRET, getUserId } from "../../../utils"
 
 import {
   getUserById,
