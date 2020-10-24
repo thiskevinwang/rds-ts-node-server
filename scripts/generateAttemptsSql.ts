@@ -25,6 +25,9 @@ const client = new Client({
 })
 
 const USER_ID = "a5f5d36a-6677-41c2-85b8-7578b4d98972"
+/**
+ * List of 365 objects
+ */
 const days = Array(365)
   .fill(null)
   .map((e, i) => {
@@ -70,15 +73,21 @@ async function main() {
 
     {
       console.time("⏰ Generating attempts took")
-      const outer = days.map(({ date }) => {
+      const outer = days.map(({ date }, index) => {
         const inner = Array(_.random(0, 40))
           .fill(null)
           .map(() => {
             let params = { attempt: {} } as IInsertAttemptForUserIdParams
-            params.attempt.grade = _.random(0, 10)
+            // or hangboard duration...
+            params.attempt.grade = _.random(15, 30) + index
             params.attempt.send = [true, false][_.random(0, 1)]
             params.attempt.userId = USER_ID
-            params.attempt.date = date
+
+            let dt = new Date(date)
+            dt.setHours(_.random(0, 23))
+            dt.setMinutes(_.random(0, 59))
+            dt.setSeconds(_.random(0, 59))
+            params.attempt.date = dt
 
             return insertAttemptForUserId.run(params, client)
           })

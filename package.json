@@ -12,6 +12,7 @@
     "dev:watch": "concurrently \"pgtyped -w -c config.json\" \"ts-node-dev --no-notify --respawn --transpileOnly index.ts\"",
     "dev:migrations": "ts-node scripts/migration.ts",
     "dev:container": "docker run --rm --name postboi -e POSTGRES_PASSWORD=mysecretpassword -d -p 8080:5432 postgres:13-alpine",
+    "dev:generate": "ts-node scripts/generateAttemptsSql.ts",
     "watch": "pgtyped -w -c config.json",
     "format": "prettier --write src/**/*.ts"
   },
