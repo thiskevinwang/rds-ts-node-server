@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev --no-notify --respawn --transpileOnly index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only index.ts",
     "dev:watch": "concurrently \"pgtyped -w -c config.json\" \"ts-node-dev --no-notify --respawn --transpileOnly index.ts\"",
     "dev:migrations": "ts-node scripts/migration.ts",
     "dev:container": "docker run --rm --name postboi -e POSTGRES_PASSWORD=mysecretpassword -d -p 8080:5432 postgres:13-alpine",
@@ -27,14 +27,14 @@
     "@types/node": "12.12.16",
     "@types/pg": "^7.14.4",
     "prettier": "^2.0.2",
-    "ts-node": "8.5.4",
-    "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.9.7"
+    "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0",
+    "typescript": "^4.0.5"
   },
   "dependencies": {
     "@pgtyped/cli": "^0.8.1",
     "@pgtyped/query": "^0.8.1",
-    "apollo-server": "^2.16.0",
+    "apollo-server": "^2.19.0",
     "aws-sdk": "^2.592.0",
     "bcryptjs": "^2.4.3",
     "common-tags": "^1.8.0",
