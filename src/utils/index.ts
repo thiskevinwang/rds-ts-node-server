@@ -1,2 +1,2 @@
-export { getUserId, APP_SECRET } from "./getUserId"
+export { getUserId, APP_SECRET, TokenPayload } from "./getUserId"
 export { decodeBearerToken } from "./decodeBearerToken"
