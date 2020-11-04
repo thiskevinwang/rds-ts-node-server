@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev --debug --no-notify --respawn --transpile-only index.ts",
+    "dev": "ts-node-dev --debug --no-notify --tree-kill --respawn --transpile-only index.ts",
     "dev:watch": "concurrently \"pgtyped -w -c config.json\" \"ts-node-dev --no-notify --respawn --transpile-only index.ts\"",
     "dev:migrations": "ts-node scripts/migration.ts",
     "dev:container": "docker run --rm --name postboi -e POSTGRES_PASSWORD=mysecretpassword -d -p 8080:5432 postgres:13-alpine",
