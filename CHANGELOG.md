@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2020-10-08
+
+### Added
+
+- `axios`
+- `jwks-rsa`
+- Mutation: getToken
+- cognito to resolver-context object
+- `src/utils/decodeBearerToken.ts`
+
+### Changed
+
+- bump ts packages
+- AuthDirective hits Cognito well-known JWKS
+- split up /utils folder
+
 ## [0.1.1] - 2020-08-06
 
 ### Added
@@ -110,6 +126,8 @@ add skip/take to getCommentsByUrl
 
 ### Added
 
+[0.2.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.10...v0.1.0
 [0.0.10]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.9...v0.0.10
