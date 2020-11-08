@@ -104,6 +104,18 @@ export const typeDefs = gql`
     date: Date!
   }
 
+  """
+  The typical response shape from AWS Cognito
+  - expect this from the /oauth2/token endpoint
+  """
+  type AuthResponse {
+    IdToken: String!
+    AccessToken: String!
+    RefreshToken: String
+    ExpiresIn: Int!
+    TokenType: String! # "Bearer"
+  }
+
   type Query {
     getFirstUser: User
     getUserById(id: ID!): User
@@ -136,6 +148,11 @@ export const typeDefs = gql`
       firstName: String!
       lastName: String!
     ): AuthPayload
+
+    """
+    Trade a code—appended by the Cognito Hosted UI—for Cognito Tokens
+    """
+    getToken(code: String!): AuthResponse
 
     updatePassword(password: String!, newPassword: String!): AuthPayload
 
