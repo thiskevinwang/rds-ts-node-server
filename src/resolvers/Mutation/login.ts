@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcryptjs"
 
 import { ResolverFn } from ".."
-import { APP_SECRET, TokenPayload } from "../../utils"
+import { APP_SECRET } from "../../utils"
 import { User } from "../../entity/User"
 
 type LoginArgs = {
