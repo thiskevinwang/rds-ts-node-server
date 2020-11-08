@@ -1,7 +1,7 @@
 import "dotenv/config"
-import * as jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 
-import { Context } from "../"
+import type { Context } from "../../"
 
 export const APP_SECRET = process.env.APP_SECRET
 
