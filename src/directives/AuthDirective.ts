@@ -1,10 +1,11 @@
 import { SchemaDirectiveVisitor } from "apollo-server"
 import { GraphQLField, defaultFieldResolver } from "graphql"
 
-import { getUserId } from "../utils"
+import { decodeBearerToken } from "../utils"
 
 const AUTH_ERROR = "🔒 This field requires you to be authenticated"
 /**
+ * The Auth directive
  * @usage
  *
  * ```graphql
@@ -21,7 +22,7 @@ export class AuthDirective extends SchemaDirectiveVisitor {
     field.resolve = async function (...args) {
       // Check Authorization Header
       const context = args[2]
-      getUserId(context)
+      await decodeBearerToken(context)
 
       // Business as usual
       const result = await resolve.apply(this, args)
