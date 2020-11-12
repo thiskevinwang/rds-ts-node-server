@@ -18,7 +18,10 @@ const HEADERS = {
  * It does so by making a POST request to <cognito_domain>/oauth2/token
  */
 export const getToken: ResolverFn = async (parent, { code }, context, info) => {
-  const data = qs.stringify({
+  // console.log(OAUTH2_TOKEN_ENDPOINT)
+  // console.log(COGNITO_CLIENT_ID)
+  // console.log(COGNITO_REDIRECT_URI)
+  const body = qs.stringify({
     grant_type: "authorization_code",
     client_id: COGNITO_CLIENT_ID,
     redirect_uri: COGNITO_REDIRECT_URI,
@@ -29,11 +32,12 @@ export const getToken: ResolverFn = async (parent, { code }, context, info) => {
     method: "post",
     url: OAUTH2_TOKEN_ENDPOINT,
     headers: HEADERS,
-    data: data,
+    data: body,
   }
 
   try {
-    const { data } = await axios(config)
+    const res = await axios(config)
+    const data = res.data
 
     if (!data) throw new AuthenticationError("Failed to authenticate")
 
@@ -47,7 +51,9 @@ export const getToken: ResolverFn = async (parent, { code }, context, info) => {
       TokenType: data?.token_type,
     }
   } catch (err) {
-    console.error(err)
-    throw new ApolloError(err.toString?.())
+    if (err.response) {
+      throw new ApolloError(err.response?.data?.error)
+    }
+    throw new ApolloError(err.message)
   }
 }
