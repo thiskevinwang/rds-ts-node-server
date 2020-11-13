@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
+    "nodemon": "nodemon -e ts -w ./src -x yarn start",
     "dev": "ts-node-dev --debug --no-notify --tree-kill --respawn --transpile-only index.ts",
     "dev:watch": "concurrently \"pgtyped -w -c config.json\" \"ts-node-dev --no-notify --respawn --transpile-only index.ts\"",
     "dev:migrations": "ts-node scripts/migration.ts",
@@ -26,6 +27,7 @@
     "@types/ms": "^0.7.31",
     "@types/node": "12.12.16",
     "@types/pg": "^7.14.4",
+    "nodemon": "^2.0.6",
     "prettier": "^2.0.2",
     "ts-node": "^9.0.0",
     "ts-node-dev": "^1.0.0",
