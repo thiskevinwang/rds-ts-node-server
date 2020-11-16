@@ -12,16 +12,12 @@ export interface IGetUserByIdResult {
   created: Date;
   updated: Date | null;
   deleted: Date | null;
-  type: string;
   username: string;
   email: string;
-  password: string;
   first_name: string;
   last_name: string;
   avatar_url: string | null;
-  last_password_request: Date | null;
-  verified_date: Date | null;
-  banned: boolean | null;
+  cognito_sub: string;
 }
 
 /** 'GetUserById' query type */
@@ -58,7 +54,6 @@ export interface IInsertCommentForUserResult {
   created: Date;
   updated: Date | null;
   deleted: Date | null;
-  type: string;
   body: string;
   url: string;
   user_id: string;
