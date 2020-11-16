@@ -6,15 +6,15 @@ import {
 } from "typeorm"
 
 export abstract class Base {
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn("uuid")
+  id: string
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamp with time zone" })
   created: Date
 
-  @UpdateDateColumn({ nullable: true })
+  @UpdateDateColumn({ nullable: true, type: "timestamp with time zone" })
   updated: Date
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: "timestamp with time zone" })
   deleted: Date
 }
