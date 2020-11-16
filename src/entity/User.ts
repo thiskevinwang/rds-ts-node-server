@@ -13,9 +13,6 @@ export class User extends Base {
   @Column({ type: "varchar", length: 62, unique: true })
   email: string
 
-  @Column({ default: "password", select: false })
-  password: string
-
   @Column({ length: 50 })
   first_name: string
 
