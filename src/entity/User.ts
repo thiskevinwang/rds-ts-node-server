@@ -7,9 +7,6 @@ import { Attempt } from "./Attempt"
 
 @Entity({ name: "users" })
 export class User extends Base {
-  @Column({ default: "User" })
-  type: string = "User"
-
   @Column({ type: "varchar", length: 25, unique: true })
   username: string
 
