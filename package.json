@@ -42,7 +42,6 @@
     "aws-sdk": "^2.592.0",
     "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
-    "common-tags": "^1.8.0",
     "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
     "graphql": "15.4.0",
