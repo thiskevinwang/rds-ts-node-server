@@ -1,7 +1,6 @@
 import "reflect-metadata"
 import "dotenv/config"
 
-import * as bcrypt from "bcryptjs"
 import { createConnection } from "typeorm"
 import _ from "lodash"
 import ms from "ms"
@@ -49,7 +48,6 @@ async function main() {
     user.first_name = process.env.TEST_FIRST_NAME as string
     user.last_name = process.env.TEST_LAST_NAME as string
     user.email = process.env.TEST_EMAIL as string
-    user.password = await bcrypt.hash(process.env.TEST_PASSWORD as string, 10)
     user.username = process.env.TEST_USERNAME as string
   }
 

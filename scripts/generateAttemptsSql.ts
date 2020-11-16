@@ -1,7 +1,6 @@
 import "dotenv/config"
 
 import { Client } from "pg"
-import * as bcrypt from "bcryptjs"
 import ms from "ms"
 import _ from "lodash"
 
@@ -56,10 +55,6 @@ async function main() {
     params.user.firstName = process.env.TEST_FIRST_NAME as string
     params.user.lastName = process.env.TEST_LAST_NAME as string
     params.user.email = process.env.TEST_EMAIL as string
-    params.user.password = await bcrypt.hash(
-      process.env.TEST_PASSWORD as string,
-      10
-    )
     params.user.username = process.env.TEST_USERNAME as string
 
     const [user] = await getOrCreateUser.run(params, client)
