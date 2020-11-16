@@ -19,6 +19,9 @@ export class User extends Base {
   @Column({ length: 50 })
   last_name: string
 
+  @Column({ type: "uuid" })
+  cognito_sub: string
+
   @Column({ length: 255, nullable: true })
   avatar_url: string
 
