@@ -9,12 +9,12 @@ export abstract class Base {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @CreateDateColumn({ type: "timestamp with time zone" })
+  @CreateDateColumn({ type: "timestamptz" })
   created: Date
 
-  @UpdateDateColumn({ nullable: true, type: "timestamp with time zone" })
+  @UpdateDateColumn({ nullable: true, type: "timestamptz" })
   updated: Date
 
-  @Column({ nullable: true, type: "timestamp with time zone" })
+  @Column({ nullable: true, type: "timestamptz" })
   deleted: Date
 }
