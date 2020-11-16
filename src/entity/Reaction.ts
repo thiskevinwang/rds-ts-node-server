@@ -16,9 +16,6 @@ export enum ReactionVariant {
 
 @Entity({ name: "reactions" })
 export class Reaction extends Base {
-  @Column({ default: "Reaction" })
-  type: string = "Reaction"
-
   @Column({
     type: "enum",
     enum: ReactionVariant,

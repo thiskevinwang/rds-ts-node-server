@@ -6,9 +6,6 @@ import { Reaction } from "./Reaction"
 
 @Entity({ name: "comments" })
 export class Comment extends Base {
-  @Column({ default: "Comment" })
-  type: string = "Comment"
-
   @Column()
   body: string
 

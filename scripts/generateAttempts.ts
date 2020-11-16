@@ -1,7 +1,6 @@
 import "reflect-metadata"
 import "dotenv/config"
 
-import * as bcrypt from "bcryptjs"
 import { createConnection } from "typeorm"
 import _ from "lodash"
 import ms from "ms"
@@ -9,6 +8,8 @@ import ms from "ms"
 import { entities } from "../src/entity"
 import { Attempt } from "../src/entity/Attempt"
 import { User } from "../src/entity/User"
+
+const USER_ID = "a5f5d36a-6677-41c2-85b8-7578b4d98972"
 
 async function main() {
   const host = process.env.RDS_DB_HOST
@@ -41,7 +42,7 @@ async function main() {
   user = (await connection
     .getRepository(User)
     .createQueryBuilder("user")
-    .where("user.id = :id", { id: 1 })
+    .where("user.id = :id", { id: USER_ID })
     .getOne()) as User
 
   if (!user) {
@@ -49,8 +50,8 @@ async function main() {
     user.first_name = process.env.TEST_FIRST_NAME as string
     user.last_name = process.env.TEST_LAST_NAME as string
     user.email = process.env.TEST_EMAIL as string
-    user.password = await bcrypt.hash(process.env.TEST_PASSWORD as string, 10)
     user.username = process.env.TEST_USERNAME as string
+    user.cognito_sub = USER_ID
   }
 
   const days = Array(365)

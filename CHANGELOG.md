@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2020-11-15
+
+### BREAKING CHANGES
+
+- removed all password-related things
+  - Cognito will be the source for user auth
+- removed old migrations;
+- created new migrations;
+- Entity Column types
+  - ids -> `uuid`
+  - Dates => `timestamptz`
+- GraphQL Schema
+  - removed fields
+  - created `Base` interface
+- updated PgTyped queries
+
+### Packages
+
+- prettier 2.1.2
+- removed many others
+
 ## [0.2.0] - 2020-10-08
 
 ### Added
@@ -126,6 +147,7 @@ add skip/take to getCommentsByUrl
 
 ### Added
 
+[0.3.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.0...v0.1.1

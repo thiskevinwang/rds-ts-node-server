@@ -1,7 +1,7 @@
 /** Types generated for queries found in "src/resolvers/Query/getAllUsers/getAllUsers.sql" */
 import { PreparedQuery } from '@pgtyped/query';
 
-export type Reactions_variant_enum = 'Like' | 'Love' | 'Haha' | 'Wow' | 'Sad' | 'Angry' | 'None';
+export type reactions_variant_enum = 'Like' | 'Love' | 'Haha' | 'Wow' | 'Sad' | 'Angry' | 'None';
 
 /** 'GetAllUsers' parameters type */
 export type IGetAllUsersParams = void;
@@ -12,16 +12,12 @@ export interface IGetAllUsersResult {
   created: Date;
   updated: Date | null;
   deleted: Date | null;
-  type: string;
   username: string;
   email: string;
-  password: string;
   first_name: string;
   last_name: string;
   avatar_url: string | null;
-  last_password_request: Date | null;
-  verified_date: Date | null;
-  banned: boolean | null;
+  cognito_sub: string;
 }
 
 /** 'GetAllUsers' query type */
@@ -95,7 +91,6 @@ export interface IGetCommentsForUserIdResult {
   created: Date;
   updated: Date | null;
   deleted: Date | null;
-  type: string;
   body: string;
   url: string;
   user_id: string;
@@ -134,8 +129,7 @@ export interface IGetReactionsForUserIdResult {
   created: Date;
   updated: Date | null;
   deleted: Date | null;
-  type: string;
-  variant: Reactions_variant_enum;
+  variant: reactions_variant_enum;
   comment_id: string;
   user_id: string;
 }
