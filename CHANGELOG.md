@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GraphQL Schema
   - removed fields
   - created `Base` interface
+- updated PgTyped queries
 
 ## [0.2.0] - 2020-10-08
 
