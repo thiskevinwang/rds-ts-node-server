@@ -1,6 +1,4 @@
 import { ResolverFn } from ".."
-import { getUserId } from "../../utils"
-import { User } from "../../entity/User"
 
 type S3GetSignedPutObjectUrlArgs = {
   fileName: string
@@ -18,20 +16,7 @@ export const s3GetSignedPutObjectUrl: ResolverFn<
   S3GetSignedPutObjectUrlReturn,
   S3GetSignedPutObjectUrlArgs
 > = async function (parent, args, context, info) {
-  const userId = getUserId(context)
-  if (!userId) throw new Error("No userId in token")
   const { s3, connection } = context
-
-  const user = await connection
-    .getRepository(User)
-    .createQueryBuilder("user")
-    .where("user.id = :id", { id: userId })
-    .getOne()
-
-  if (!user.verified_date) {
-    // Only provide signed url to verified users
-    throw new Error("You must be verified to do that")
-  }
 
   const { fileName, fileType } = args
   const params = {
