@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - created `Base` interface
 - updated PgTyped queries
 
+### Packages
+
+- prettier 2.1.2
+- removed many others
+
 ## [0.2.0] - 2020-10-08
 
 ### Added
