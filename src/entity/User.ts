@@ -25,15 +25,6 @@ export class User extends Base {
   @Column({ length: 255, nullable: true })
   avatar_url: string
 
-  @Column({ nullable: true })
-  last_password_request: Date
-
-  @Column({ nullable: true })
-  verified_date: Date
-
-  @Column({ nullable: true })
-  banned: boolean
-
   @OneToMany(type => Comment, comment => comment.user, {
     cascade: true,
   })

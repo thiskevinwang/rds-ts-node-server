@@ -10,6 +10,13 @@ export const dateScalarTypeDef = gql`
 `
 
 export const typeDefs = gql`
+  interface Base {
+    id: ID!
+    created: Date!
+    updated: Date
+    deleted: Date
+  }
+
   type S3Payload {
     """
     #### Example
@@ -33,17 +40,16 @@ export const typeDefs = gql`
     objectUrl: String!
   }
 
-  type User {
+  type User implements Base {
     id: ID!
-    username: String!
-    email: String!
-    password: String @development
-    first_name: String!
-    last_name: String!
     created: Date!
     updated: Date
-    last_password_request: Date
-    verified_date: Date
+    deleted: Date
+    username: String!
+    email: String!
+    first_name: String!
+    last_name: String!
+    cognito_sub: String!
     avatar_url: String
     comments: [Comment]
     reactions: [Reaction]
@@ -55,13 +61,14 @@ export const typeDefs = gql`
     created_DESC
   }
 
-  type Comment {
+  type Comment implements Base {
     id: ID!
-    body: String!
-    url: String!
     created: Date!
     updated: Date
     deleted: Date
+    #
+    body: String!
+    url: String!
     user: User!
     reactions: [Reaction]
   }
@@ -76,28 +83,23 @@ export const typeDefs = gql`
     None
   }
 
-  type Reaction {
+  type Reaction implements Base {
     id: ID!
-    variant: ReactionVariant!
     created: Date!
     updated: Date
+    deleted: Date
+    #
+    variant: ReactionVariant!
     comment: Comment!
     user: User!
   }
 
-  type AuthPayload {
-    token: String
-    user: User
-  }
-
-  type ResetPasswordResponse {
-    message: String
-  }
-
-  type Attempt {
+  type Attempt implements Base {
     id: ID!
     created: Date!
     updated: Date
+    deleted: Date
+    #
     grade: Int
     send: Boolean
     user: User
@@ -137,13 +139,9 @@ export const typeDefs = gql`
     Trade a code—appended by the Cognito Hosted UI—for Cognito Tokens
     """
     getToken(code: String!): AuthResponse
-
     createComment(body: String!, url: String!): Comment
-
     deleteCommentById(id: ID!): Comment
-
     reactToComment(variant: ReactionVariant!, commentId: ID!): Reaction
-
     s3GetSignedPutObjectUrl(
       """
       my-little-bunny.jpg
@@ -158,7 +156,6 @@ export const typeDefs = gql`
     ): S3Payload!
 
     updateUserAvatar(avatarUrl: String!): User
-
     createAttempt(userId: ID!, send: Boolean!, grade: Int!, date: Date): Attempt
   }
 
