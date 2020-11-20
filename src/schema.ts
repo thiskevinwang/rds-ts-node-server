@@ -153,7 +153,7 @@ export const typeDefs = gql`
       jpg, jpeg, png, etc.
       """
       fileType: String!
-    ): S3Payload!
+    ): S3Payload! @auth
 
     updateUserAvatar(avatarUrl: String!): User
     createAttempt(userId: ID!, send: Boolean!, grade: Int!, date: Date): Attempt
