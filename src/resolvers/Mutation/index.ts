@@ -1,5 +1,4 @@
 export { createAttempt } from "./createAttempt"
-export { createComment } from "./createComment"
 export { deleteCommentById } from "./deleteCommentById"
 export { getToken } from "./getToken"
 export { reactToComment } from "./reactToComment"

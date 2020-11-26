@@ -118,11 +118,9 @@ export const moreTypeDefs = gql`
   type Query {
     getFirstUser: User
     getUserById(id: ID!): User
-    getAllUsers: [User]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
     getAllAttempts: [Attempt]
-    getAttemptsByUserId(userId: ID!): [Attempt]
     getCommentsByUrl(
       url: String!
       filter: CommentOrderByInput
@@ -136,7 +134,6 @@ export const moreTypeDefs = gql`
     Trade a code—appended by the Cognito Hosted UI—for Cognito Tokens
     """
     getToken(code: String!): AuthResponse
-    createComment(body: String!, url: String!): Comment
     deleteCommentById(id: ID!): Comment
     reactToComment(variant: ReactionVariant!, commentId: ID!): Reaction
     s3GetSignedPutObjectUrl(
