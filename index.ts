@@ -1,7 +1,7 @@
 import "reflect-metadata"
 import "dotenv/config"
 
-import { ApolloServer, makeExecutableSchema, PubSub } from "apollo-server"
+import { ApolloServer, makeExecutableSchema } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
 import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
@@ -29,7 +29,6 @@ interface ExpressContext {
   res: Response
   connection?: ExecutionParams
 }
-const pubsub = new PubSub()
 
 AWS.config.update({
   region: "us-east-1",
@@ -41,7 +40,6 @@ const cognito = new AWS.CognitoIdentityServiceProvider()
 
 export interface Context {
   connection: Connection
-  pubsub: PubSub
   s3: AWS.S3
   cognito: AWS.CognitoIdentityServiceProvider
   req: Request
@@ -118,7 +116,6 @@ async function main() {
         ...ctx,
         connection,
         cognito,
-        pubsub,
         s3,
       } as Context
     },

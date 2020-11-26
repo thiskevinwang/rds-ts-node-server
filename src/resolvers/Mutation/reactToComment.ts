@@ -14,7 +14,7 @@ export const reactToComment: ResolverFn<
   Reaction,
   ReactToCommentArgs
 > = async function (parent, args, context, info) {
-  const { connection, pubsub } = context
+  const { connection } = context
   /** The one who is reacting */
   const userId = getUserId(context)
   if (!userId) throw new Error("No userId in token")
@@ -53,13 +53,13 @@ export const reactToComment: ResolverFn<
     if (existingReaction.variant === args.variant) {
       existingReaction.variant = ReactionVariant.None
       await connection.manager.save(existingReaction)
-      await pubsub.publish(NEW_REACTION, { newReaction: existingReaction })
+
       return existingReaction
     }
 
     existingReaction.variant = args.variant
     await connection.manager.save(existingReaction)
-    await pubsub.publish(NEW_REACTION, { newReaction: existingReaction })
+
     return existingReaction
   }
 
@@ -69,7 +69,6 @@ export const reactToComment: ResolverFn<
   reaction.comment = comment
 
   await connection.manager.save(reaction)
-  await pubsub.publish(NEW_REACTION, { newReaction: reaction })
 
   return reaction
 }
