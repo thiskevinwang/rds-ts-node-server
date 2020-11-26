@@ -1,4 +1,4 @@
-import { gql } from "apollo-server"
+import { gql, IResolvers } from "apollo-server"
 
 const s3QueryTypeDefsfrom = gql`
   type S3Payload {
@@ -40,7 +40,13 @@ const s3QueryTypeDefsfrom = gql`
   }
 `
 
-export * as s3QueryResolvers from "./Query"
+import * as s3QueryResolvers from "./Query"
+export const s3Resolvers: IResolvers = {
+  Query: {
+    ...s3QueryResolvers,
+  },
+  Mutation: {},
+}
 export const s3TypeDefs = gql`
   ${s3QueryTypeDefsfrom}
 `

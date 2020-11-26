@@ -1,4 +1,4 @@
-import { gql } from "apollo-server"
+import { gql, IResolvers } from "apollo-server"
 
 const authSharedTypeDefs = gql`
   """
@@ -23,7 +23,11 @@ const authMutationTypeDefs = gql`
   }
 `
 
-export * as authMutationResolvers from "./Mutation"
+import * as authMutationResolvers from "./Mutation"
+export const authResolvers: IResolvers = {
+  Query: {},
+  Mutation: { ...authMutationResolvers },
+}
 export const authTypeDefs = gql`
   ${authSharedTypeDefs}
   ${authMutationTypeDefs}

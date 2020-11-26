@@ -1,25 +1,25 @@
 import {
   IExecutableSchemaDefinition,
+  ITypeDefinitions,
+  IResolvers,
   makeExecutableSchema,
 } from "apollo-server"
+import merge from "lodash/merge"
 
 import * as _typeDefs from "./typeDefs"
 import { AuthDirective, DevelopmentDirective } from "../directives"
-import { s3QueryResolvers } from "../modules/S3"
-import { authMutationResolvers } from "../modules/Auth"
+import { authResolvers } from "../modules/Auth"
+import { s3Resolvers } from "../modules/S3"
+import { userResolvers } from "../modules/User"
 
-const typeDefs: IExecutableSchemaDefinition["typeDefs"] = [
-  ...Object.values(_typeDefs),
-]
+const typeDefs: ITypeDefinitions = [...Object.values(_typeDefs)]
 
-const resolvers: IExecutableSchemaDefinition["resolvers"] = {
-  Query: {
-    ...s3QueryResolvers,
-  },
-  Mutation: {
-    ...authMutationResolvers,
-  },
-}
+const resolvers: IResolvers = merge(
+  { Query: {}, Mutation: {} },
+  authResolvers,
+  s3Resolvers,
+  userResolvers
+)
 
 const schemaDirectives: IExecutableSchemaDefinition["schemaDirectives"] = {
   development: DevelopmentDirective,
