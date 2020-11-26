@@ -1,6 +1,6 @@
 import { gql } from "apollo-server"
 
-export const directivesTypeDef = gql`
+export const directivesTypeDefs = gql`
   directive @development on FIELD_DEFINITION
   directive @auth on FIELD_DEFINITION
 `
@@ -9,14 +9,39 @@ export const dateScalarTypeDef = gql`
   scalar Date
 `
 
-export const typeDefs = gql`
-  interface Base {
+export const authTypeDef = gql`
+  """
+  The typical response shape from AWS Cognito
+  - expect this from the /oauth2/token endpoint
+  """
+  type AuthResponse {
+    IdToken: String!
+    AccessToken: String!
+    RefreshToken: String
+    ExpiresIn: Int!
+    TokenType: String! # "Bearer"
+  }
+`
+
+export const userTypeDef = gql`
+  type User implements Base {
     id: ID!
     created: Date!
     updated: Date
     deleted: Date
+    username: String!
+    email: String!
+    first_name: String!
+    last_name: String!
+    cognito_sub: String!
+    avatar_url: String
+    comments: [Comment]
+    reactions: [Reaction]
+    attempts: [Attempt]
   }
+`
 
+export const moreTypeDefs = gql`
   type S3Payload {
     """
     #### Example
@@ -38,22 +63,6 @@ export const typeDefs = gql`
     https://<bucket-name>.s3.amazonaws.com/<somefile.png>
     """
     objectUrl: String!
-  }
-
-  type User implements Base {
-    id: ID!
-    created: Date!
-    updated: Date
-    deleted: Date
-    username: String!
-    email: String!
-    first_name: String!
-    last_name: String!
-    cognito_sub: String!
-    avatar_url: String
-    comments: [Comment]
-    reactions: [Reaction]
-    attempts: [Attempt]
   }
 
   enum CommentOrderByInput {
@@ -106,18 +115,6 @@ export const typeDefs = gql`
     date: Date!
   }
 
-  """
-  The typical response shape from AWS Cognito
-  - expect this from the /oauth2/token endpoint
-  """
-  type AuthResponse {
-    IdToken: String!
-    AccessToken: String!
-    RefreshToken: String
-    ExpiresIn: Int!
-    TokenType: String! # "Bearer"
-  }
-
   type Query {
     getFirstUser: User
     getUserById(id: ID!): User
@@ -162,5 +159,14 @@ export const typeDefs = gql`
   type Subscription {
     newReaction: Reaction
     newComment: Comment
+  }
+`
+
+export const baseTypeDefs = gql`
+  interface Base {
+    id: ID!
+    created: Date!
+    updated: Date
+    deleted: Date
   }
 `

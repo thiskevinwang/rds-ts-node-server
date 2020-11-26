@@ -1,4 +1,4 @@
-import { Context } from "../../"
+import { Context } from "../.."
 import * as Subscription from "./Subscription"
 import * as Query from "./Query"
 import * as Mutation from "./Mutation"
@@ -11,7 +11,11 @@ export type ResolverFn<R = any, A = any> = (
 ) => Promise<R>
 
 export const resolvers = {
-  Query,
-  Mutation,
+  Query: {
+    ...Query,
+  },
+  Mutation: {
+    ...Mutation,
+  },
   Subscription,
 }

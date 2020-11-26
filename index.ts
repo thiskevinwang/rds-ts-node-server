@@ -1,7 +1,7 @@
 import "reflect-metadata"
 import "dotenv/config"
 
-import { ApolloServer, PubSub } from "apollo-server"
+import { ApolloServer, makeExecutableSchema, PubSub } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
 import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
@@ -115,8 +115,10 @@ async function main() {
       development: DevelopmentDirective,
       auth: AuthDirective,
     },
-    typeDefs: Object.values(typeDefs),
-    resolvers: resolvers,
+    schema: makeExecutableSchema({
+      typeDefs: Object.values(typeDefs),
+      resolvers: resolvers,
+    }),
     introspection: true,
     playground: true,
     /**
