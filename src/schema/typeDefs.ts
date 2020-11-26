@@ -1,7 +1,7 @@
 import { gql } from "apollo-server"
 
-export { s3QueryTypeDefs } from "../resolvers/S3"
-export { authMutationTypeDefs, authSharedTypeDefs } from "../resolvers/Auth"
+export { s3TypeDefs } from "../modules/S3"
+export { authTypeDefs } from "../modules/Auth"
 
 export const directivesTypeDefs = gql`
   directive @development on FIELD_DEFINITION

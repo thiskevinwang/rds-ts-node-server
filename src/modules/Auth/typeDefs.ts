@@ -1,6 +1,6 @@
 import { gql } from "apollo-server"
 
-export const authSharedTypeDefs = gql`
+export default gql`
   """
   The typical response shape from AWS Cognito
   - expect this from the /oauth2/token endpoint
