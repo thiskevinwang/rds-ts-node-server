@@ -2,7 +2,7 @@ import { ApolloError, AuthenticationError } from "apollo-server"
 import axios, { AxiosRequestConfig } from "axios"
 import qs from "qs"
 
-import type { ResolverFn } from "../../../resolverFn"
+import type { ResolverFn } from "../../resolverFn"
 
 const OAUTH2_TOKEN_ENDPOINT = process.env.OAUTH2_TOKEN_ENDPOINT
 const COGNITO_CLIENT_ID = process.env.COGNITO_CLIENT_ID

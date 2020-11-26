@@ -1,4 +1,4 @@
-import type { ResolverFn } from "../../../resolverFn"
+import type { ResolverFn } from "../../resolverFn"
 
 type S3GetSignedPutObjectUrlArgs = {
   fileName: string
