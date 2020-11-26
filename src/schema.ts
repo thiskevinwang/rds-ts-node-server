@@ -116,11 +116,9 @@ export const moreTypeDefs = gql`
   }
 
   type Query {
-    getFirstUser: User
-    getUserById(id: ID!): User
+    getAllAttempts: [Attempt]
     getAllComments: [Comment]
     getAllReactions: [Reaction]
-    getAllAttempts: [Attempt]
     getCommentsByUrl(
       url: String!
       filter: CommentOrderByInput
