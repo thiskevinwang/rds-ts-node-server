@@ -132,8 +132,6 @@ export const moreTypeDefs = gql`
     Trade a code—appended by the Cognito Hosted UI—for Cognito Tokens
     """
     getToken(code: String!): AuthResponse
-    deleteCommentById(id: ID!): Comment
-    reactToComment(variant: ReactionVariant!, commentId: ID!): Reaction
     s3GetSignedPutObjectUrl(
       """
       my-little-bunny.jpg
@@ -147,7 +145,6 @@ export const moreTypeDefs = gql`
       fileType: String!
     ): S3Payload! @auth
 
-    updateUserAvatar(avatarUrl: String!): User
     createAttempt(userId: ID!, send: Boolean!, grade: Int!, date: Date): Attempt
   }
 

@@ -1,5 +1,4 @@
 import { ResolverFn } from ".."
-import { getUserId } from "../../utils"
 import { User } from "../../entity/User"
 import { Attempt } from "../../entity/Attempt"
 
@@ -15,11 +14,6 @@ export const createAttempt: ResolverFn<
   CreateAttemptArgs
 > = async function (parent, { userId, send, grade, date }, context, info) {
   const { connection } = context
-  /**
-   * @todo use token from headers for userId
-   */
-  // const userId = getUserId(context)
-  // if (!userId) throw new Error("No userId in token")
 
   const user = await connection
     .getRepository(User)
