@@ -1,25 +1,33 @@
-import { makeExecutableSchema } from "apollo-server"
+import {
+  IExecutableSchemaDefinition,
+  makeExecutableSchema,
+} from "apollo-server"
 
+import * as _typeDefs from "./typeDefs"
 import { AuthDirective, DevelopmentDirective } from "../directives"
-import * as typeDefs from "./typeDefs"
+import { s3QueryResolvers } from "../modules/S3"
+import { authMutationResolvers } from "../modules/Auth"
 
-import * as S3Query from "../modules/S3/resolvers/Query"
-import * as AuthMutation from "../modules/Auth/resolvers/Mutation"
+const typeDefs: IExecutableSchemaDefinition["typeDefs"] = [
+  ...Object.values(_typeDefs),
+]
 
-const resolvers = {
+const resolvers: IExecutableSchemaDefinition["resolvers"] = {
   Query: {
-    ...S3Query,
+    ...s3QueryResolvers,
   },
   Mutation: {
-    ...AuthMutation,
+    ...authMutationResolvers,
   },
 }
 
+const schemaDirectives: IExecutableSchemaDefinition["schemaDirectives"] = {
+  development: DevelopmentDirective,
+  auth: AuthDirective,
+}
+
 export const schema = makeExecutableSchema({
-  typeDefs: [...Object.values(typeDefs)],
+  typeDefs,
   resolvers,
-  schemaDirectives: {
-    development: DevelopmentDirective,
-    auth: AuthDirective,
-  },
+  schemaDirectives,
 })
