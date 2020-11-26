@@ -1,17 +1,13 @@
+import type { IFieldResolver } from "apollo-server"
 import { Context } from "../.."
-import * as Query from "./Query"
-import * as Mutation from "./Mutation"
+import * as S3Query from "./S3/Query"
+import * as Mutation from "./Auth/Mutation"
 
-export type ResolverFn<R = any, A = any> = (
-  parent: any,
-  args: A,
-  context: Context,
-  info: any
-) => Promise<R>
+export type ResolverFn<A = any> = IFieldResolver<any, Context>
 
 export const resolvers = {
   Query: {
-    ...Query,
+    ...S3Query,
   },
   Mutation: {
     ...Mutation,

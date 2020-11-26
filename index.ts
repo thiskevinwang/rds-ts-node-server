@@ -1,34 +1,14 @@
 import "reflect-metadata"
 import "dotenv/config"
 
-import { ApolloServer, makeExecutableSchema } from "apollo-server"
+import { ApolloServer } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
-import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
 
-import * as typeDefs from "./src/schema"
-import { resolvers } from "./src/resolvers"
-import { entities } from "./src/entity"
-import { AuthDirective, DevelopmentDirective } from "./src/directives"
-import { DocumentNode, GraphQLSchema } from "graphql"
+import type { Request, Response } from "express"
 
-export interface ExecutionParams<TContext = any> {
-  query: string | DocumentNode
-  variables: {
-    [key: string]: any
-  }
-  operationName: string
-  context: TContext
-  formatResponse?: Function
-  formatError?: Function
-  callback?: Function
-  schema?: GraphQLSchema
-}
-interface ExpressContext {
-  req: Request
-  res: Response
-  connection?: ExecutionParams
-}
+import { schema } from "./src/schema"
+import { entities } from "./src/entity"
 
 AWS.config.update({
   region: "us-east-1",
@@ -89,14 +69,7 @@ async function main() {
   const connection = connectionRes.status === "fulfilled" && connectionRes.value
 
   const server = new ApolloServer({
-    schemaDirectives: {
-      development: DevelopmentDirective,
-      auth: AuthDirective,
-    },
-    schema: makeExecutableSchema({
-      typeDefs: Object.values(typeDefs),
-      resolvers: resolvers,
-    }),
+    schema: schema,
     introspection: true,
     playground: true,
     /**
@@ -106,7 +79,7 @@ async function main() {
      *   already exists.
      * @see https://www.apollographql.com/docs/apollo-server/data/data/#context-argument
      */
-    context: (ctx: ExpressContext) => {
+    context: ctx => {
       /**
        * custom headers
        * @see https://stackoverflow.com/a/60114804/9823455
