@@ -3,12 +3,9 @@ import type { ResolverFn } from "../../resolverFn"
 import { decodeBearerToken } from "../../../utils"
 import { User } from "../../../entity/User"
 
-/**
- * Get a signed s3 url to POST an image to S3
- */
 export const getOrCreateUser: ResolverFn = async function (
   parent,
-  { email },
+  { email, firstName, lastName },
   context,
   info
 ) {
@@ -38,6 +35,8 @@ export const getOrCreateUser: ResolverFn = async function (
       user.id = cognitoUuid
       user.cognito_sub = cognitoUuid
       user.email = email
+      user.first_name = firstName
+      user.last_name = lastName
       user = await connection.manager.save(user)
       console.log("new", user)
       return user

@@ -11,7 +11,7 @@ export const userResolvers: IResolvers = {
 
 const userMutationTypeDefs = gql`
   extend type Mutation {
-    getOrCreateUser(email: String!): User
+    getOrCreateUser(email: String!, firstName: String, lastName: String): User
   }
 `
 export const userTypeDefs = gql`
