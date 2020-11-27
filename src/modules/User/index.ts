@@ -14,13 +14,14 @@ export const userResolvers: IResolvers = {
 
 const userQueryTypeDefs = gql`
   extend type Query {
-    getUsers(limit: Int): [User]
+    getUsers(limit: Int): [User] @development
   }
 `
 
 const userMutationTypeDefs = gql`
   extend type Mutation {
     getOrCreateUser(email: String!, firstName: String, lastName: String): User
+      @auth
   }
 `
 export const userTypeDefs = gql`
