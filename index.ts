@@ -1,36 +1,14 @@
 import "reflect-metadata"
 import "dotenv/config"
 
-import { ApolloServer, PubSub } from "apollo-server"
+import { ApolloServer } from "apollo-server"
 import { createConnection, Connection } from "typeorm"
-import { Request, Response } from "express"
 import * as AWS from "aws-sdk"
-import { Client } from "pg"
 
-import * as typeDefs from "./src/schema"
-import { resolvers } from "./src/resolvers"
+import type { Request, Response } from "express"
+
+import { schema } from "./src/schema"
 import { entities } from "./src/entity"
-import { AuthDirective, DevelopmentDirective } from "./src/directives"
-import { DocumentNode, GraphQLSchema } from "graphql"
-
-export interface ExecutionParams<TContext = any> {
-  query: string | DocumentNode
-  variables: {
-    [key: string]: any
-  }
-  operationName: string
-  context: TContext
-  formatResponse?: Function
-  formatError?: Function
-  callback?: Function
-  schema?: GraphQLSchema
-}
-interface ExpressContext {
-  req: Request
-  res: Response
-  connection?: ExecutionParams
-}
-const pubsub = new PubSub()
 
 AWS.config.update({
   region: "us-east-1",
@@ -39,14 +17,10 @@ AWS.config.update({
 })
 const s3 = new AWS.S3()
 const cognito = new AWS.CognitoIdentityServiceProvider()
-const sesv2 = new AWS.SESV2()
 
 export interface Context {
   connection: Connection
-  client: Client
-  pubsub: PubSub
   s3: AWS.S3
-  sesv2: AWS.SESV2
   cognito: AWS.CognitoIdentityServiceProvider
   req: Request
   res: Response
@@ -58,18 +32,6 @@ async function main() {
   const username = process.env.RDS_DB_USERNAME
   const password = process.env.RDS_DB_PASSWORD
   const database = process.env.RDS_DB_DATABASE
-
-  const makePgClientConnection = async () => {
-    const client = new Client({
-      host,
-      port,
-      user: username,
-      password,
-      database,
-    })
-    await client.connect()
-    return client
-  }
 
   const makeTypeORMConnection = async () => {
     let connection = await createConnection({
@@ -102,21 +64,12 @@ async function main() {
     return connection
   }
 
-  const [clientRes, connectionRes] = await Promise.allSettled([
-    makePgClientConnection(),
-    makeTypeORMConnection(),
-  ])
+  const [connectionRes] = await Promise.allSettled([makeTypeORMConnection()])
 
-  const client = clientRes.status === "fulfilled" && clientRes.value
   const connection = connectionRes.status === "fulfilled" && connectionRes.value
 
   const server = new ApolloServer({
-    schemaDirectives: {
-      development: DevelopmentDirective,
-      auth: AuthDirective,
-    },
-    typeDefs: Object.values(typeDefs),
-    resolvers: resolvers,
+    schema: schema,
     introspection: true,
     playground: true,
     /**
@@ -126,7 +79,7 @@ async function main() {
      *   already exists.
      * @see https://www.apollographql.com/docs/apollo-server/data/data/#context-argument
      */
-    context: (ctx: ExpressContext) => {
+    context: ctx => {
       /**
        * custom headers
        * @see https://stackoverflow.com/a/60114804/9823455
@@ -134,12 +87,9 @@ async function main() {
       ctx.res.header("Set-Cookie", "wtf=hellooooo")
       return {
         ...ctx,
-        client,
         connection,
         cognito,
-        pubsub,
         s3,
-        sesv2,
       } as Context
     },
   })

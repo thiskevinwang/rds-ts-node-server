@@ -5,13 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - 2020-11-20
+## [v0.4.0] - 2020-11-26
+
+### BREAKING CHANGES
+
+This change completely reworks the project structure, to avoid single gigantic GraphQL schemas/typedefs.
+
+- previously: Things were divided by Query & Mutation
+- new: Things are separated into "/modules" which more or less represent db entities or a certain domain, like AWS S3
+
+This was a huge pain to figure out. One strange "duplicate Query.someField" error (that I did not see on another apollo-server project) was resolved by removing node_modules, and reinstalling.
+
+I also deleted a ton of old resolvers, and removed PgTyped. As cool as it was to learn an write raw SQL queries for a bit... ain't nobody got time for that.
+
+### Changed
+
+- entire project structure to user 'modules' structure
+
+### Removed
+
+- many old queries / mutations
+
+### Added
+
+- getOrCreateUser (auth)
+- getUsers
+
+###
+
+## [v0.3.1] - 2020-11-20
 
 ### Fixed
 
 - secured `s3GetSignedPutObjectUrl` mutation with `@auth` directive
 
-## [0.3.0] - 2020-11-15
+## [v0.3.0] - 2020-11-15
 
 ### BREAKING CHANGES
 
@@ -32,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - prettier 2.1.2
 - removed many others
 
-## [0.2.0] - 2020-10-08
+## [v0.2.0] - 2020-10-08
 
 ### Added
 
@@ -48,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AuthDirective hits Cognito well-known JWKS
 - split up /utils folder
 
-## [0.1.1] - 2020-08-06
+## [v0.1.1] - 2020-08-06
 
 ### Added
 
@@ -63,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `createComment`
   - `signup`
 
-## [0.1.0] - 2020-07-26
+## [v0.1.0] - 2020-07-26
 
 ### Added
 
@@ -101,7 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `getAllUsers`
   - `getAttemptsByUserId`
 
-## [0.0.10] - 2020-04-03
+## [v0.0.10] - 2020-04-03
 
 ### Changed
 
@@ -113,23 +141,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - type Mutation resolvers
 - pick type on getUserId
 
-## [0.0.9] - 2020-04-03
+## [v0.0.9] - 2020-04-03
 
 ### Changed
 
-## [0.0.8] - 2020-04-03
+## [v0.0.8] - 2020-04-03
 
 ### Added
 
 sessions-and-attempts
 
-## [0.0.7] - 2020-04-03
+## [v0.0.7] - 2020-04-03
 
 ### Added
 
 add skip/take to getCommentsByUrl
 
-## [0.0.6] - 2020-04-03
+## [v0.0.6] - 2020-04-03
 
 ### Changed
 
@@ -141,7 +169,7 @@ add skip/take to getCommentsByUrl
 
 - Add deleteCommentById mutation
 
-## [0.0.4] - 2019-12-26
+## [v0.0.4] - 2019-12-26
 
 ### Added
 
@@ -149,20 +177,22 @@ add skip/take to getCommentsByUrl
 - Add CommentOrderByInput enum filter https://github.com/thiskevinwang/rds-ts-node-server/commit/e892cf9ea3b344b95d2fde0a36daf906a4cb9f4a
 - reactToComment ID arg https://github.com/thiskevinwang/rds-ts-node-server/commit/4fb513ed05f3b0f5915ecb2add71cffca604a651
 
-## [0.0.3] - 2019-12-22
+## [v0.0.3] - 2019-12-22
 
 ### Added
 
-[0.3.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.2...v0.2.0
-[0.1.2]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.1...v0.1.2
-[0.1.1]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.10...v0.1.0
-[0.0.10]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.9...v0.0.10
-[0.0.9]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.8...v0.0.9
-[0.0.8]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.7...v0.0.8
-[0.0.7]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.6...v0.0.7
-[0.0.6]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.5...v0.0.6
-[0.0.5]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.4...v0.0.5
-[0.0.4]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.3...v0.0.4
-[0.0.3]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.2...v0.0.3
+[v0.4.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.3.1...v0.4.0
+[v0.3.1]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.3.0...v0.3.1
+[v0.3.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.2.0...v0.3.0
+[v0.2.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.2...v0.2.0
+[v0.1.2]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.1...v0.1.2
+[v0.1.1]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.1.0...v0.1.1
+[v0.1.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.10...v0.1.0
+[v0.0.10]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.9...v0.0.10
+[v0.0.9]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.8...v0.0.9
+[v0.0.8]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.7...v0.0.8
+[v0.0.7]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.6...v0.0.7
+[v0.0.6]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.5...v0.0.6
+[v0.0.5]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.4...v0.0.5
+[v0.0.4]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.3...v0.0.4
+[v0.0.3]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.0.2...v0.0.3

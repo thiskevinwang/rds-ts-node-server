@@ -75,6 +75,12 @@ export const verifyTokenAsync = async (token: string) => {
   }
 }
 
+/**
+ * Pass the graphql resolver context to this method
+ * @usage ```ts
+ * const decoded = decodeBearerToken(context)
+ * ```
+ */
 export async function decodeBearerToken({ req }: Context) {
   const Authorization = req.get("Authorization")
   if (Authorization) {

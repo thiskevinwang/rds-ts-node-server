@@ -7,16 +7,16 @@ import { Attempt } from "./Attempt"
 
 @Entity({ name: "users" })
 export class User extends Base {
-  @Column({ type: "varchar", length: 25, unique: true })
+  @Column({ type: "varchar", length: 36, unique: true, nullable: true })
   username: string
 
   @Column({ type: "varchar", length: 62, unique: true })
   email: string
 
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   first_name: string
 
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   last_name: string
 
   @Column({ type: "uuid" })
@@ -36,7 +36,6 @@ export class User extends Base {
   reactions: Reaction[]
 
   @OneToMany(type => Attempt, attempt => attempt.user, {
-    nullable: true,
     cascade: true,
   })
   attempts: Attempt[]

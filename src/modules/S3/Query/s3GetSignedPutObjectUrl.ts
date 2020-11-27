@@ -1,4 +1,4 @@
-import { ResolverFn } from ".."
+import type { ResolverFn } from "../../resolverFn"
 
 type S3GetSignedPutObjectUrlArgs = {
   fileName: string
@@ -12,11 +12,13 @@ type S3GetSignedPutObjectUrlReturn = {
 /**
  * Get a signed s3 url to POST an image to S3
  */
-export const s3GetSignedPutObjectUrl: ResolverFn<
-  S3GetSignedPutObjectUrlReturn,
-  S3GetSignedPutObjectUrlArgs
-> = async function (parent, args, context, info) {
-  const { s3, connection } = context
+export const s3GetSignedPutObjectUrl: ResolverFn<S3GetSignedPutObjectUrlArgs> = async function (
+  parent,
+  args,
+  context,
+  info
+) {
+  const { s3 } = context
 
   const { fileName, fileType } = args
   const params = {
