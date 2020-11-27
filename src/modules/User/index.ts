@@ -1,13 +1,22 @@
 import { gql, IResolvers } from "apollo-server"
 
+import * as userQueryResolvers from "./Query"
 import * as userMutationResolvers from "./Mutation"
 
 export const userResolvers: IResolvers = {
-  Query: {},
+  Query: {
+    ...userQueryResolvers,
+  },
   Mutation: {
     ...userMutationResolvers,
   },
 }
+
+const userQueryTypeDefs = gql`
+  extend type Query {
+    getUsers(limit: Int): [User]
+  }
+`
 
 const userMutationTypeDefs = gql`
   extend type Mutation {
@@ -27,5 +36,6 @@ export const userTypeDefs = gql`
     cognito_sub: String!
     avatar_url: String
   }
+  ${userQueryTypeDefs}
   ${userMutationTypeDefs}
 `
