@@ -11,7 +11,7 @@ export const getOrCreateUser: ResolverFn = async function (
   context,
   info
 ) {
-  console.log("Mutation.getOrCreateUser")
+  console.log("Query.getOrCreateUser")
   const decoded = await decodeBearerToken(context)
   const id = decoded.username
 
