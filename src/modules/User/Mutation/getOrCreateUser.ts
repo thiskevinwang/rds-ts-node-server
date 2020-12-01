@@ -1,5 +1,6 @@
 import type { ResolverFn } from "../../resolverFn"
 import { decodeBearerToken } from "../../../utils"
+import { ApolloError } from "apollo-server"
 
 /**
  * Attempt to find a user with the UUID on the Bearer token
@@ -14,5 +15,5 @@ export const getOrCreateUser: ResolverFn = async function (
   const decoded = await decodeBearerToken(context)
   const id = decoded.username
 
-  return {}
+  throw new ApolloError("Unimplemented")
 }
