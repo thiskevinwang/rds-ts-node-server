@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 I'm done using TypeORM and Postgres.
 
+### Added
+
+- `process.env.TABLE_NAME`
+  - this needs to be added in Vercel
+- graphql-codegen
+
 ## [v0.4.0] - 2020-11-26
 
 ### BREAKING CHANGES
