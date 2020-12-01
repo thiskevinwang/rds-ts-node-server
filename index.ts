@@ -24,8 +24,8 @@ AWS.config.update(
       }
     : {
         region: "localhost",
-        accessKeyId: "zeaq37",
-        secretAccessKey: "eyw4ab",
+        accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
       }
 )
 
@@ -42,14 +42,16 @@ const options:
   : {
       apiVersion: "2012-08-10",
       region: "localhost",
-      endpoint: "http://localhost:8081",
+      endpoint: "http://localhost:8001",
       /**
-       * if connecting to the NoSQL Workbench DB, use these.
-       *
+       * Steps w/ NoSQL Workbench
+       * 1. Run dynamo docker container
+       * 2. Create a local connection via NoSQL Workbench
+       * 3. Find credentials
        * if connecting to docker DB, leave empty
        */
-      accessKeyId: "zeaq37",
-      secretAccessKey: "eyw4ab",
+      accessKeyId: process.env.NO_SQL_WORKBENCH_ACCESS_KEY_ID,
+      secretAccessKey: process.env.NO_SQL_WORKBENCH_SECRET_ACCESS_KEY,
     }
 /**
  * Locking the API Version
@@ -106,6 +108,12 @@ async function main() {
       } as Context
     },
   })
+
+  if (__DEV__) {
+    console.log("ℹ️ You are in __DEV__ mode")
+    const tables = await dynamoDb.listTables().promise()
+    console.log(tables)
+  }
 
   server.listen({ port: 4044 }).then(({ url, subscriptionsUrl }) => {
     console.log(`🚀 Server ready at ${url}`)

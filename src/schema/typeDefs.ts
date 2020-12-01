@@ -17,10 +17,13 @@ export const globalTypeDefs = gql`
   type Query
   type Mutation
 
+  """
+  Implemented by every 'row' in the Dynamo table
+  """
   interface Base {
-    id: ID!
-    created: Date!
+    PK: ID!
+    SK: String
+    created: Date
     updated: Date
-    deleted: Date
   }
 `
