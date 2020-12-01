@@ -12,7 +12,7 @@ const s3QueryTypeDefsfrom = gql`
 
     &Expires=1576639181
 
-    &Signature=I1Epx79MX4bzbje%2FbNIgMCQfyU0%3D
+    &Signature=somehash
 
     &x-amz-acl=public-read
     """
