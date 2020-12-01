@@ -1,7 +1,6 @@
 import { ForbiddenError } from "apollo-server"
 import type { ResolverFn } from "../../resolverFn"
 import { decodeBearerToken } from "../../../utils"
-import { User } from "../../../entity/User"
 
 export const updateUsername: ResolverFn = async function (
   parent,
@@ -18,20 +17,5 @@ export const updateUsername: ResolverFn = async function (
     throw new ForbiddenError("You're not allowed to do that")
   }
 
-  const { connection } = context
-
-  try {
-    const { raw } = await connection
-      .createQueryBuilder()
-      .update(User, { username })
-      .where("id = :id", { id })
-      .returning("*")
-      .execute()
-    console.log("raw[0]", raw[0])
-
-    return raw[0]
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
+  return {}
 }

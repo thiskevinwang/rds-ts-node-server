@@ -57,3 +57,13 @@ ts-node ./node_modules/typeorm/cli.js migration:generate -n Bootstrap
 # fish
 touch ./migrations/(date +"%Y%m%d%H%M")-Init.sql
 ```
+
+## Local DynamoDB w/ Docker
+
+- https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.Docker.html
+- https://hub.docker.com/r/amazon/dynamodb-local
+
+```bash
+docker pull amazon/dynamodb-local
+docker run --rm -d -it -p 8000:8000 amazon/dynamodb-local
+```

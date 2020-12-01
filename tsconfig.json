@@ -9,11 +9,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "./build",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "sourceMap": true,
     "esModuleInterop": true
   },
-  "exclude": ["scripts", "migrations"],
+  "exclude": [],
   "include": ["**/*.ts", "**/*.tsx"]
 }
