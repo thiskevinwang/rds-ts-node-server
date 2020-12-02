@@ -15,7 +15,7 @@ export const userResolvers: IResolvers = {
 const userQueryTypeDefs = gql`
   extend type Query {
     getOrCreateUser(userInput: UserInput!): User! @auth
-    getUsers(limit: Int): [User] @development @auth
+    getUsers(limit: Int): [User] @auth
   }
 `
 
