@@ -85,8 +85,7 @@ export const updateUsername: ResolverFn = async function (
     // Update the username attribute
     // Delete the old username row
     // Create a new username row, if username is truthy
-    const TransactItems: WriteItem[] = [Update, Delete]
-    if (username) TransactItems.push(Put)
+    const TransactItems: WriteItem[] = [Update, Delete, Put]
 
     const params: DocumentClient.TransactWriteItemsInput = { TransactItems }
 
@@ -103,9 +102,9 @@ export const updateUsername: ResolverFn = async function (
     //   'statusCode', 'retryable',
     //   'retryDelay'
     // ]
-    console.log(err.message) // Transaction cancelled, please refer cancellation reasons for specific reasons [None, ConditionalCheckFailed]
-    console.log(err.code) // TransactionCanceledException
-    console.log(err.name) // TransactionCanceledException
+    // console.log(err.message) // Transaction cancelled, please refer cancellation reasons for specific reasons [None, ConditionalCheckFailed]
+    // console.log(err.code) // TransactionCanceledException
+    // console.log(err.name) // TransactionCanceledException
     if (err.message?.includes("ConditionalCheckFailed")) {
       throw new UserInputError("That username is taken!")
     }
