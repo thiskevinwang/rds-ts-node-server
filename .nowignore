@@ -12,3 +12,4 @@ ormconfig.*
 scripts/
 migrations/
 config.json
+codegen.yml
