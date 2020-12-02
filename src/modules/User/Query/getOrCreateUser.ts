@@ -30,7 +30,7 @@ export const getOrCreateUser: ResolverFn = async function (
   }
 
   const previous = await docClient.get(getItemParams).promise()
-  console.log("previous", previous)
+  // console.log("previous", previous)
   if (!_.isEmpty(previous)) {
     return previous.Item
   }

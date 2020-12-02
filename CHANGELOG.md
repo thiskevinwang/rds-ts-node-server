@@ -16,6 +16,7 @@ I'm done using TypeORM and Postgres.
 - `process.env.TABLE_NAME`
   - this needs to be added in Vercel
 - graphql-codegen
+- update `updateUsername` to Dynamo logic
 
 ## [v0.4.0] - 2020-11-26
 
