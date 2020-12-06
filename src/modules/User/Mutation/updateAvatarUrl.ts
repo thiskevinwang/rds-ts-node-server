@@ -1,12 +1,9 @@
 import { UserInputError, ApolloError, ForbiddenError } from "apollo-server"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "../../resolverFn"
 import { decodeBearerToken } from "../../../utils"
 
 const TABLE_NAME = process.env.TABLE_NAME
-
-type WriteItem = DocumentClient.TransactWriteItem
 
 export const updateAvatarUrl: ResolverFn = async function (
   parent,
@@ -39,7 +36,7 @@ export const updateAvatarUrl: ResolverFn = async function (
         },
       })
       .promise()
-    return { avatar_url: avatarUrl }
+    return { avatar_url: avatarUrl, id }
   } catch (err) {
     if (err.message?.includes("ConditionalCheckFailed")) {
       throw new UserInputError("That username is taken!")

@@ -21,8 +21,8 @@ const userQueryTypeDefs = gql`
 
 const userMutationTypeDefs = gql`
   extend type Mutation {
-    updateUsername(id: String!, username: String!): User! @auth
-    updateAvatarUrl(id: String!, avatarUrl: String!): User! @auth
+    updateUsername(id: ID!, username: String!): User! @auth
+    updateAvatarUrl(id: ID!, avatarUrl: String!): User! @auth
   }
 `
 export const userTypeDefs = gql`
