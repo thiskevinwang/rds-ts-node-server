@@ -86,7 +86,8 @@ export type FederatedIdentity = {
 
 export type User = Base & {
   __typename?: "User"
-  PK: Scalars["ID"]
+  id: Scalars["ID"]
+  PK: Scalars["String"]
   SK?: Maybe<Scalars["String"]>
   created: Scalars["Date"]
   updated?: Maybe<Scalars["Date"]>
@@ -126,8 +127,6 @@ export type Mutation = {
   /** Trade a code—appended by the Cognito Hosted UI—for Cognito Tokens */
   getToken?: Maybe<AuthResponse>
   /** 🔒 This field requires you to be authenticated */
-  getOrCreateUser: User
-  /** 🔒 This field requires you to be authenticated */
   updateUsername: User
   /** 🔒 This field requires you to be authenticated */
   updateAvatarUrl: User
@@ -142,12 +141,6 @@ export type MutationGetTokenArgs = {
   code: Scalars["String"]
 }
 
-export type MutationGetOrCreateUserArgs = {
-  email: Scalars["String"]
-  firstName?: Maybe<Scalars["String"]>
-  lastName?: Maybe<Scalars["String"]>
-}
-
 export type MutationUpdateUsernameArgs = {
   id: Scalars["String"]
   username: Scalars["String"]
@@ -160,7 +153,8 @@ export type MutationUpdateAvatarUrlArgs = {
 
 /** Implemented by every 'row' in the Dynamo table */
 export type Base = {
-  PK: Scalars["ID"]
+  id: Scalars["ID"]
+  PK: Scalars["String"]
   SK?: Maybe<Scalars["String"]>
   created?: Maybe<Scalars["Date"]>
   updated?: Maybe<Scalars["Date"]>
