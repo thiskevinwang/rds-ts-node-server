@@ -138,6 +138,11 @@ export type MutationS3GetSignedPutObjectUrlArgs = {
   fileType: Scalars["String"]
 }
 
+export type MutationS3GetSignedPutObjectUrlArgs = {
+  fileName: Scalars["String"]
+  fileType: Scalars["String"]
+}
+
 export type MutationGetTokenArgs = {
   code: Scalars["String"]
 }
