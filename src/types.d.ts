@@ -129,6 +129,8 @@ export type Mutation = {
   getOrCreateUser: User
   /** 🔒 This field requires you to be authenticated */
   updateUsername: User
+  /** 🔒 This field requires you to be authenticated */
+  updateAvatarUrl: User
 }
 
 export type MutationS3GetSignedPutObjectUrlArgs = {
@@ -147,8 +149,13 @@ export type MutationGetOrCreateUserArgs = {
 }
 
 export type MutationUpdateUsernameArgs = {
-  id: Scalars["ID"]
+  id: Scalars["String"]
   username: Scalars["String"]
+}
+
+export type MutationUpdateAvatarUrlArgs = {
+  id: Scalars["String"]
+  avatarUrl: Scalars["String"]
 }
 
 /** Implemented by every 'row' in the Dynamo table */

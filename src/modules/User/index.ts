@@ -23,7 +23,8 @@ const userMutationTypeDefs = gql`
   extend type Mutation {
     getOrCreateUser(email: String!, firstName: String, lastName: String): User!
       @auth
-    updateUsername(id: ID!, username: String!): User! @auth
+    updateUsername(id: String!, username: String!): User! @auth
+    updateAvatarUrl(id: String!, avatarUrl: String!): User! @auth
   }
 `
 export const userTypeDefs = gql`
