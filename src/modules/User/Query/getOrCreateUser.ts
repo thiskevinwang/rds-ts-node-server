@@ -44,14 +44,12 @@ export const getOrCreateUser: ResolverFn = async function (
         created: new Date().toISOString(),
         ...userInput,
       },
-      ConditionExpression: "#PK <> :pk AND #SK <> :sk", // put succeed if true
+      ConditionExpression: "#PK <> :pk", // put succeed if true
       ExpressionAttributeNames: {
         "#PK": "PK",
-        "#SK": "SK",
       },
       ExpressionAttributeValues: {
         ":pk": `USER#${id}`,
-        ":sk": `#PROFILE`,
       },
       ReturnValues: "ALL_OLD",
     }

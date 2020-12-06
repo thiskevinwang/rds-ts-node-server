@@ -1,4 +1,5 @@
 import type { ResolverFn } from "../../resolverFn"
+import { decodeBearerToken } from "../../../utils"
 
 type S3GetSignedPutObjectUrlArgs = {
   fileName: string
@@ -18,6 +19,7 @@ export const s3GetSignedPutObjectUrl: ResolverFn<S3GetSignedPutObjectUrlArgs> = 
   context,
   info
 ) {
+  const { sub } = await decodeBearerToken(context)
   const { s3 } = context
 
   const { fileName, fileType } = args

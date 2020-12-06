@@ -1,6 +1,6 @@
 import { gql, IResolvers } from "apollo-server"
 
-const s3QueryTypeDefsfrom = gql`
+const s3MutationTypeDefs = gql`
   type S3Payload {
     """
     #### Example
@@ -24,14 +24,14 @@ const s3QueryTypeDefsfrom = gql`
     objectUrl: String!
   }
 
-  extend type Query {
+  extend type Mutation {
     s3GetSignedPutObjectUrl(
       """
-      my-little-bunny.jpg
+      some-user-id/avatar.jpg
       """
       fileName: String!
       """
-      A standard MIME type describing thhe format of the object data.
+      A standard MIME type describing the format of the object data.
 
       jpg, jpeg, png, etc.
       """
@@ -40,13 +40,13 @@ const s3QueryTypeDefsfrom = gql`
   }
 `
 
-import * as s3QueryResolvers from "./Query"
+import * as s3MutationResolvers from "./Mutation"
 export const s3Resolvers: IResolvers = {
-  Query: {
-    ...s3QueryResolvers,
+  Query: {},
+  Mutation: {
+    ...s3MutationResolvers,
   },
-  Mutation: {},
 }
 export const s3TypeDefs = gql`
-  ${s3QueryTypeDefsfrom}
+  ${s3MutationTypeDefs}
 `
