@@ -21,7 +21,8 @@ export const globalTypeDefs = gql`
   Implemented by every 'row' in the Dynamo table
   """
   interface Base {
-    PK: ID!
+    id: ID!
+    PK: String!
     SK: String
     created: Date
     updated: Date

@@ -21,8 +21,6 @@ const userQueryTypeDefs = gql`
 
 const userMutationTypeDefs = gql`
   extend type Mutation {
-    getOrCreateUser(email: String!, firstName: String, lastName: String): User!
-      @auth
     updateUsername(id: String!, username: String!): User! @auth
     updateAvatarUrl(id: String!, avatarUrl: String!): User! @auth
   }
@@ -59,7 +57,8 @@ export const userTypeDefs = gql`
   }
 
   type User implements Base {
-    PK: ID!
+    id: ID!
+    PK: String!
     SK: String
     created: Date!
     updated: Date
