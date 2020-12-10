@@ -8,7 +8,7 @@ export const getUsers: ResolverFn = async function (
   context,
   info
 ) {
-  console.log("Query.getUsers")
+  console.log(info.parentType, info.fieldName)
   const { docClient } = context
 
   const params: DocumentClient.QueryInput = {

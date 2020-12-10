@@ -1,5 +1,4 @@
 import _ from "lodash"
-
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import type { ResolverFn } from "../../resolverFn"
 
@@ -13,9 +12,9 @@ export const getOrCreateUser: ResolverFn = async function (
   parent,
   { userInput },
   context,
-  { fieldName, parentType }
+  info
 ) {
-  console.log("Query.getOrCreateUser")
+  console.log(info.parentType, info.fieldName)
 
   const decoded = await decodeBearerToken(context)
   const id = decoded.username
