@@ -38,6 +38,7 @@ export const getOrCreateUser: ResolverFn = async function (
     const putItemParams: DocumentClient.PutItemInput = {
       TableName: process.env.TABLE_NAME,
       Item: {
+        id: id,
         PK: `USER#${id}`,
         SK: `#IDENTITY`,
         created: new Date().toISOString(),
