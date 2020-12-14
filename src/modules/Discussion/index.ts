@@ -47,8 +47,8 @@ const discussionQueryTypeDefs = gql`
   extend type Query {
     getDiscussions(
       lastEvaluatedKey: LastEvaluatedKey
-    ): GetDiscussionsQueryResult
-    getDiscussionById(id: ID!): Discussion
+    ): GetDiscussionsQueryResult @auth
+    getDiscussionById(id: ID!): Discussion @auth
   }
 `
 const discussionMutationTypeDefs = gql`
@@ -69,8 +69,8 @@ const discussionMutationTypeDefs = gql`
   }
 
   extend type Mutation {
-    createDiscussion(input: CreateDiscussionInput!): Discussion
-    createComment(input: CreateCommentInput!): Comment
+    createDiscussion(input: CreateDiscussionInput!): Discussion @auth
+    createComment(input: CreateCommentInput!): Comment @auth
   }
 `
 

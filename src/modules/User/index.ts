@@ -36,15 +36,12 @@ export const userTypeDefs = gql`
   }
 
   input UserInput {
-    cognitoUsername: String
+    id: String
     email: String
-    email_verified: Boolean
     identities: [FederatedIdentityInput]
-    sub: String
     name: String
     family_name: String
     given_name: String
-    preferred_username: String
   }
 
   type FederatedIdentity {
@@ -57,6 +54,11 @@ export const userTypeDefs = gql`
   }
 
   type User implements Base {
+    """
+    This might end up being the same value as Cognito's
+    - \`sub\`
+    - \`cogntio:username\`
+    """
     id: ID!
     PK: String!
     SK: String
@@ -65,12 +67,8 @@ export const userTypeDefs = gql`
     # at_hash: String
     # aud: String
     # auth_time: Int
-    """
-    This maps to a cognito idTokenPayload's \`cognito:username\`
-    """
-    cognitoUsername: String
+
     email: String
-    email_verified: Boolean
     # exp: Int
     # iat: Int
     identities: [FederatedIdentity]
