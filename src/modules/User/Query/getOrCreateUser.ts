@@ -1,14 +1,15 @@
+import { ApolloError, ForbiddenError } from "apollo-server"
 import _ from "lodash"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 import type { ResolverFn } from "../../resolverFn"
 
 import { decodeBearerToken } from "../../../utils"
-import { ApolloError } from "apollo-server"
+import { QueryGetOrCreateUserArgs } from "types"
 
 /**
  * Attempt to find a user with the UUID on the Bearer token
  */
-export const getOrCreateUser: ResolverFn = async function (
+export const getOrCreateUser: ResolverFn<QueryGetOrCreateUserArgs> = async function (
   parent,
   { userInput },
   context,
@@ -18,12 +19,15 @@ export const getOrCreateUser: ResolverFn = async function (
 
   const decoded = await decodeBearerToken(context)
   const id = decoded.username
+
+  // Cannot getOrCreateUser for an id that is not self
+  if (id !== userInput.id) throw new ForbiddenError("You cannot do that")
   const { docClient } = context
 
   const getItemParams: DocumentClient.GetItemInput = {
     TableName: process.env.TABLE_NAME,
     Key: {
-      PK: `USER#${userInput.cognitoUsername}`,
+      PK: `USER#${userInput.id}`,
       SK: `#IDENTITY`,
     },
   }
