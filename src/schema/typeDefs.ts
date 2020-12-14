@@ -1,6 +1,7 @@
 import { gql } from "apollo-server"
 
 export { s3TypeDefs } from "../modules/S3"
+export { discussionTypeDefs } from "../modules/Discussion"
 export { authTypeDefs } from "../modules/Auth"
 export { userTypeDefs } from "../modules/User"
 
