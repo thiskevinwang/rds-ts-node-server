@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - installed `yup` to validate requests that pass GraphQL schema validation, but don't actually have valid values
 
+#### DynamoDB `GSI`'s
+
+- **`GSI_SK_Created`**
+  - Partition: `'SK'`; Sort: `'created'`
+- **`GSI_Root_Created`**
+  - Partition: `'Root'`; Sort: `'created'`
+
 ## [v0.6.3] - 2020-12-10
 
 ### Added
