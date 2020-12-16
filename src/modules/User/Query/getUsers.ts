@@ -21,7 +21,6 @@ export const getUsers: ResolverFn = async function (
     ExpressionAttributeNames: {
       "#8f150": "SK",
     },
-    Limit: 10,
   }
   try {
     const res = await docClient.query(params).promise()
