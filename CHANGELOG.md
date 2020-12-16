@@ -282,6 +282,7 @@ add skip/take to getCommentsByUrl
 
 ### Added
 
+[v0.7.2]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.7.1...v0.7.2
 [v0.7.1]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.7.0...v0.7.1
 [v0.7.0]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.6.2...v0.7.0
 [v0.6.2]: https://github.com/thiskevinwang/rds-ts-node-server/compare/v0.6.1...v0.6.2
